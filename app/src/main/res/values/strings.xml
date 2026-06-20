@@ -73,4 +73,28 @@
     <string name="config_isr_deduccion">Deducción ISR casado (B/.)</string>
     <string name="config_guardar">Guardar</string>
     <string name="config_cerrar_sesion">Cerrar sesión</string>
+
+    <string name="registro_titulo">Crear cuenta</string>
+    <string name="registro_subtitulo">Comienza a gestionar tu nómina</string>
+    <string name="registro_nombre">Tu nombre</string>
+    <string name="registro_email">Correo electrónico</string>
+    <string name="registro_password">Contraseña</string>
+    <string name="registro_empresa">Nombre de tu empresa</string>
+    <string name="registro_btn">Crear cuenta y empresa</string>
+    <string name="registro_ya_tengo">¿Ya tienes cuenta? Inicia sesión</string>
+    <string name="login_registrarme">Crear cuenta nueva</string>
+    <string name="login_error_credenciales">Correo o contraseña incorrectos</string>
+    <string name="login_error_campos">Completa correo y contraseña</string>
+
+    <string name="usuarios_titulo">Gestionar usuarios</string>
+    <string name="usuarios_agregar">Agregar usuario</string>
+    <string name="usuarios_nombre">Nombre</string>
+    <string name="usuarios_email">Correo</string>
+    <string name="usuarios_password">Contraseña temporal</string>
+    <string name="usuarios_rol">Rol</string>
+    <string name="usuarios_rol_admin">Administrador</string>
+    <string name="usuarios_rol_contador">Contador</string>
+    <string name="usuarios_rol_visor">Visor</string>
+    <string name="usuarios_btn_crear">Crear usuario</string>
+    <string name="usuarios_vacio">Solo tú tienes acceso por ahora</string>
 </resources>

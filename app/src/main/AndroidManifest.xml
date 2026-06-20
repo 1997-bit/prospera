@@ -20,7 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".activities.RegistroActivity" android:exported="false" />
+        <activity android:name=".activities.GestionarUsuariosActivity" android:exported="false" />
         <activity android:name=".activities.ConfiguracionActivity" android:exported="false" />
         <activity android:name=".activities.MainActivity" android:exported="false" />
         <activity android:name=".activities.EmpleadosActivity" android:exported="false" />

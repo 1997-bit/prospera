@@ -59,7 +59,9 @@ class ConfiguracionActivity : AppCompatActivity() {
                 lifecycleScope.launch { repo.actualizarNotificaciones(activo) }
             }
         }
-
+        findViewById<android.view.View>(R.id.btnGestionarUsuarios).setOnClickListener {
+            startActivity(Intent(this, GestionarUsuariosActivity::class.java))
+        }
         findViewById<EditText>(R.id.etCssEmpleado).setText((prefs.cssEmpleado * 100).toString())
         findViewById<EditText>(R.id.etSegEducativo).setText((prefs.segEducativo * 100).toString())
         findViewById<EditText>(R.id.etIsrDeduccion).setText(prefs.isrDeduccionCasado.toString())

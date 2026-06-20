@@ -295,6 +295,31 @@
             android:textColor="@color/md_error"
             app:strokeColor="@color/md_error"
             app:layout_constraintTop_toBottomOf="@id/cardTasas" />
+        <!-- SECCIÓN EQUIPO -->
+        <TextView
+            android:id="@+id/lblEquipo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="28dp"
+            android:letterSpacing="0.1"
+            android:text="EQUIPO"
+            android:textColor="@color/md_on_surface_variant"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardTasas" />
 
+        <Button
+            android:id="@+id/btnGestionarUsuarios"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:text="Gestionar usuarios"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lblEquipo" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

@@ -4,7 +4,7 @@ import java.util.Calendar
 import java.util.Locale
 
 data class ResumenMensual(
-    val mesAnio: String,       // "Junio 2026"
+    val mesAnio: String, // "Junio 2026"
     val totalBruto: Double,
     val totalDescuentos: Double,
     val totalNeto: Double,

@@ -4,16 +4,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.prospera.app.R
 import com.prospera.app.adapters.ActividadAdapter
 import com.prospera.app.data.ActividadReciente
+import com.prospera.app.data.AuthRepository
 import com.prospera.app.data.ResumenMensual
 import com.prospera.app.utils.Moneda
 import com.prospera.app.utils.SessionManager
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var authRepo: AuthRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_main)
+        authRepo = AuthRepository(applicationContext)
 
         pintarHeader()
         pintarResumen(obtenerResumenActual())
@@ -33,8 +39,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun pintarHeader() {
-        val username = SessionManager.getUsername(this)
-        findViewById<TextView>(R.id.tvAvatarIniciales).text = iniciales(username)
+        lifecycleScope.launch {
+            val usuarioId = SessionManager.getUsuarioId(this@MainActivity)
+            val usuario = authRepo.usuarioDao.buscarPorId(usuarioId)
+            val nombre = usuario?.nombre ?: "Administrador"
+            findViewById<TextView>(R.id.tvAvatarIniciales).text = iniciales(nombre)
+        }
     }
 
     private fun iniciales(nombre: String): String =
@@ -87,7 +97,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<android.view.View>(R.id.cardReportes).setOnClickListener {
             startActivity(Intent(this, ReportesActivity::class.java))
         }
-
         findViewById<android.view.View>(R.id.avatarContainer).setOnClickListener {
             startActivity(Intent(this, ConfiguracionActivity::class.java))
         }

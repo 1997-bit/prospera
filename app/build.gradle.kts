@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation("org.mindrot:jbcrypt:0.4")
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)

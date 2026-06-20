@@ -12,6 +12,7 @@
         android:padding="24dp">
 
         <TextView
+            android:id="@+id/tvTituloForm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/nuevo_empleado_titulo"
@@ -20,7 +21,6 @@
             android:fontFamily="sans-serif-medium" />
 
         <com.google.android.material.textfield.TextInputLayout
-            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -45,7 +45,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -58,7 +57,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -71,7 +69,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -84,7 +81,20 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="@string/campo_anio_ingreso">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAnioIngreso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="4" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -93,8 +103,7 @@
                 android:id="@+id/actvEstadoCivil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                android:editable="false" />
+                android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -103,9 +112,17 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="24dp"
-            android:backgroundTint="@color/md_primary"
-            android:text="@string/btn_guardar"
-            android:textColor="@color/md_on_primary" />
+            android:text="@string/btn_guardar" />
+
+        <Button
+            android:id="@+id/btnEliminar"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/btn_eliminar"
+            android:textColor="@color/md_error"
+            android:visibility="gone" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

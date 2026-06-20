@@ -10,9 +10,10 @@ import androidx.room.RoomDatabase
         PreferenciasEntity::class,
         UsuarioEntity::class,
         EmpresaEntity::class,
-        UsuarioEmpresaEntity::class
+        UsuarioEmpresaEntity::class,
+        EmpleadoEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -21,6 +22,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun usuarioDao(): UsuarioDao
     abstract fun empresaDao(): EmpresaDao
     abstract fun usuarioEmpresaDao(): UsuarioEmpresaDao
+    abstract fun empleadoDao(): EmpleadoDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
@@ -32,7 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "prospera_db"
                 )
-                    .fallbackToDestructiveMigration() // dev only: borra y recrea si cambia el schema
+                    .fallbackToDestructiveMigration()
                     .build().also { INSTANCE = it }
             }
     }

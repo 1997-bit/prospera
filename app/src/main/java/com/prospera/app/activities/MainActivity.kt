@@ -11,6 +11,7 @@ import com.prospera.app.R
 import com.prospera.app.adapters.ActividadAdapter
 import com.prospera.app.data.ActividadReciente
 import com.prospera.app.data.AuthRepository
+import com.prospera.app.data.EmpleadoRepository
 import com.prospera.app.data.ResumenMensual
 import com.prospera.app.utils.Moneda
 import com.prospera.app.utils.SessionManager
@@ -19,6 +20,8 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var authRepo: AuthRepository
+    private lateinit var empleadoRepo: EmpleadoRepository
+    private var empresaId: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +34,18 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         authRepo = AuthRepository(applicationContext)
+        empleadoRepo = EmpleadoRepository(applicationContext)
+        empresaId = SessionManager.getEmpresaId(this)
 
         pintarHeader()
-        pintarResumen(obtenerResumenActual())
+        cargarResumen()
         pintarActividad(obtenerActividadReciente())
         configurarNavegacion()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        cargarResumen() // refresca al volver de Empleados (se creó/borró alguien)
     }
 
     private fun pintarHeader() {
@@ -54,8 +64,14 @@ class MainActivity : AppCompatActivity() {
             .joinToString("") { it.first().uppercase() }
             .ifBlank { "AD" }
 
-    /** TODO: reemplazar por consulta real a Room cuando exista DAO de Planilla. */
-    private fun obtenerResumenActual(): ResumenMensual = ResumenMensual.vacio()
+    private fun cargarResumen() {
+        lifecycleScope.launch {
+            val base = ResumenMensual.vacio()
+            val total = empleadoRepo.listarActivos(empresaId).size
+            val resumen = base.copy(colaboradoresActivos = total)
+            pintarResumen(resumen)
+        }
+    }
 
     private fun pintarResumen(resumen: ResumenMensual) {
         findViewById<TextView>(R.id.tvPeriodo).text =

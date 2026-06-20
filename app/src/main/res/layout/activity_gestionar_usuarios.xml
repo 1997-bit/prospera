@@ -20,7 +20,6 @@
             app:titleTextColor="@color/md_on_surface"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Lista de usuarios actuales -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvUsuarios"
             android:layout_width="match_parent"
@@ -43,7 +42,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-        <!-- Label sección nueva -->
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrierListaUsuarios"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="rvUsuarios,tvUsuariosVacio" />
+
         <TextView
             android:id="@+id/lblAgregar"
             android:layout_width="wrap_content"
@@ -56,7 +61,7 @@
             android:textSize="12sp"
             android:fontFamily="sans-serif-medium"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvUsuariosVacio" />
+            app:layout_constraintTop_toBottomOf="@id/barrierListaUsuarios" />
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"

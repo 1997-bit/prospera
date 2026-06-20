@@ -57,7 +57,6 @@
                 android:padding="16dp">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/config_nombre">
@@ -69,7 +68,6 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -236,7 +234,6 @@
                 android:padding="16dp">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/config_css_empleado">
@@ -248,7 +245,6 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -261,7 +257,6 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -283,18 +278,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <Button
-            android:id="@+id/btnCerrarSesion"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="32dp"
-            android:text="@string/config_cerrar_sesion"
-            android:textColor="@color/md_error"
-            app:strokeColor="@color/md_error"
-            app:layout_constraintTop_toBottomOf="@id/cardTasas" />
         <!-- SECCIÓN EQUIPO -->
         <TextView
             android:id="@+id/lblEquipo"
@@ -321,5 +304,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lblEquipo" />
+
+        <Button
+            android:id="@+id/btnCerrarSesion"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="32dp"
+            android:text="@string/config_cerrar_sesion"
+            android:textColor="@color/md_error"
+            app:strokeColor="@color/md_error"
+            app:layout_constraintTop_toBottomOf="@id/btnGestionarUsuarios" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

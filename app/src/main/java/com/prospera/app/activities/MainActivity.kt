@@ -1,12 +1,95 @@
 package com.prospera.app.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.prospera.app.R
+import com.prospera.app.adapters.ActividadAdapter
+import com.prospera.app.data.ActividadReciente
+import com.prospera.app.data.ResumenMensual
+import com.prospera.app.utils.Moneda
+import com.prospera.app.utils.SessionManager
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!SessionManager.isLoggedIn(this)) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
         setContentView(R.layout.activity_main)
+
+        pintarHeader()
+        pintarResumen(obtenerResumenActual())
+        pintarActividad(obtenerActividadReciente())
+        configurarNavegacion()
+    }
+
+    private fun pintarHeader() {
+        val username = SessionManager.getUsername(this)
+        findViewById<TextView>(R.id.tvAvatarIniciales).text = iniciales(username)
+    }
+
+    private fun iniciales(nombre: String): String =
+        nombre.trim().split(" ")
+            .filter { it.isNotBlank() }
+            .take(2)
+            .joinToString("") { it.first().uppercase() }
+            .ifBlank { "AD" }
+
+    /** TODO: reemplazar por consulta real a Room cuando exista DAO de Planilla. */
+    private fun obtenerResumenActual(): ResumenMensual = ResumenMensual.vacio()
+
+    private fun pintarResumen(resumen: ResumenMensual) {
+        findViewById<TextView>(R.id.tvPeriodo).text =
+            "${getString(R.string.main_resumen_periodo_prefijo)} ${resumen.mesAnio}"
+
+        findViewById<TextView>(R.id.tvNetoTotal).text = Moneda.formatear(resumen.totalNeto)
+        findViewById<TextView>(R.id.tvTotalDescuentos).text = Moneda.formatear(resumen.totalDescuentos)
+        findViewById<TextView>(R.id.tvNetoAPagar).text = Moneda.formatear(resumen.totalNeto)
+
+        findViewById<TextView>(R.id.tvColaboradoresActivos).text =
+            getString(R.string.main_resumen_colaboradores, resumen.colaboradoresActivos)
+    }
+
+    /** TODO: reemplazar por consulta real a Room (historial) cuando exista. */
+    private fun obtenerActividadReciente(): List<ActividadReciente> = emptyList()
+
+    private fun pintarActividad(items: List<ActividadReciente>) {
+        val rv = findViewById<RecyclerView>(R.id.rvActividad)
+        val tvVacio = findViewById<TextView>(R.id.tvActividadVacio)
+
+        if (items.isEmpty()) {
+            rv.visibility = android.view.View.GONE
+            tvVacio.visibility = android.view.View.VISIBLE
+        } else {
+            rv.visibility = android.view.View.VISIBLE
+            tvVacio.visibility = android.view.View.GONE
+            rv.layoutManager = LinearLayoutManager(this)
+            rv.adapter = ActividadAdapter(items)
+        }
+    }
+
+    private fun configurarNavegacion() {
+        findViewById<android.view.View>(R.id.cardPersonal).setOnClickListener {
+            startActivity(Intent(this, EmpleadosActivity::class.java))
+        }
+        findViewById<android.view.View>(R.id.cardPlanilla).setOnClickListener {
+            startActivity(Intent(this, PlanillaActivity::class.java))
+        }
+        findViewById<android.view.View>(R.id.cardReportes).setOnClickListener {
+            startActivity(Intent(this, ReportesActivity::class.java))
+        }
+
+        findViewById<android.view.View>(R.id.avatarContainer).setOnClickListener {
+            startActivity(Intent(this, ConfiguracionActivity::class.java))
+        }
     }
 }

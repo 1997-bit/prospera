@@ -1,3 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">prospera</string>
+    <string name="app_name">Prospera</string>
+
+    <string name="login_titulo">Prospera</string>
+    <string name="login_subtitulo">Gestión de planillas</string>
+    <string name="login_usuario">Usuario</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_btn">Ingresar</string>
+
+    <string name="empleados_titulo">Colaboradores</string>
+    <string name="empleados_buscar">Buscar por nombre, cédula o cargo</string>
+    <string name="empleados_vacio">Sin colaboradores registrados.\nToca + para agregar.</string>
+
+    <string name="nuevo_empleado_titulo">Nuevo colaborador</string>
+    <string name="editar_empleado_titulo">Editar colaborador</string>
+    <string name="campo_nombre">Nombre completo</string>
+    <string name="campo_cedula">Cédula</string>
+    <string name="campo_cargo">Cargo</string>
+    <string name="campo_departamento">Departamento</string>
+    <string name="campo_salario">Salario base mensual</string>
+    <string name="campo_estado_civil">Estado civil</string>
+    <string name="campo_anio_ingreso">Año de ingreso</string>
+    <string name="btn_guardar">Guardar</string>
+    <string name="btn_eliminar">Eliminar colaborador</string>
+
+    <string name="planilla_titulo">Cálculo de planilla</string>
+    <string name="planilla_periodo">Período</string>
+    <string name="planilla_btn_calcular">Calcular planilla</string>
+
+    <string name="reportes_titulo">Reportes</string>
+    <string name="reporte_planilla_nombre">Planilla consolidada</string>
+    <string name="reporte_planilla_desc">Informe general de todos los colaboradores</string>
+    <string name="reporte_colaboradores_nombre">Reporte de colaboradores</string>
+    <string name="reporte_colaboradores_desc">Datos personales y laborales del personal</string>
+    <string name="reporte_individual_nombre">Reporte individual</string>
+    <string name="reporte_individual_desc">Expediente de un colaborador específico</string>
+    <string name="reporte_css_nombre">Reporte CSS</string>
+    <string name="reporte_css_desc">Aportes a la Caja de Seguro Social</string>
+
+    <string name="main_app_nombre">Prospera</string>
+    <string name="main_panel_titulo">Panel Principal</string>
+
+    <string name="main_resumen_periodo_prefijo">Planilla</string>
+    <string name="main_resumen_colaboradores">%1$d colaboradores activos</string>
+    <string name="main_total_descuentos">Descuentos aprox.</string>
+    <string name="main_total_neto">Neto a pagar</string>
+
+    <string name="main_modulos_label">MÓDULOS</string>
+    <string name="main_modulo_personal">Datos del Personal</string>
+    <string name="main_modulo_personal_desc">Gestionar colaboradores</string>
+    <string name="main_modulo_planilla">Cálculo de Planilla</string>
+    <string name="main_modulo_planilla_desc">Procesar pagos mensuales</string>
+    <string name="main_modulo_reportes">Reportes</string>
+    <string name="main_modulo_reportes_desc">Informes y documentos</string>
+
+    <string name="main_actividad_label">ACTIVIDAD RECIENTE</string>
+    <string name="main_actividad_vacio">Sin actividad reciente</string>
+    <string name="reportes_subtitulo">Elige el reporte a generar</string>
+    <string name="reportes_banner_info"><![CDATA[Todos los reportes incluyen opciones para <b>imprimir y enviar por correo</b>.]]></string>
+
+    <string name="config_titulo">Configuración</string>
+    <string name="config_seccion_perfil">PERFIL</string>
+    <string name="config_nombre">Nombre completo</string>
+    <string name="config_correo">Correo electrónico</string>
+    <string name="config_seccion_apariencia">APARIENCIA</string>
+    <string name="config_modo_oscuro">Modo oscuro</string>
+    <string name="config_notificaciones">Notificaciones</string>
+    <string name="config_seccion_tasas">TASAS LEGALES</string>
+    <string name="config_tasas_advertencia">Verifica estos valores con la legislación vigente antes de modificar.</string>
+    <string name="config_css_empleado">Seguro Social empleado (%)</string>
+    <string name="config_seg_educativo">Seguro Educativo (%)</string>
+    <string name="config_isr_deduccion">Deducción ISR casado (B/.)</string>
+    <string name="config_guardar">Guardar</string>
+    <string name="config_cerrar_sesion">Cerrar sesión</string>
 </resources>

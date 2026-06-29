@@ -1,10 +1,11 @@
-package com.prospera.app.data
+package com.prospera.app.data.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.prospera.app.data.entities.EmpleadoEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.prospera.app.R
-import com.prospera.app.data.EmpleadoEntity
+import com.prospera.app.data.entities.EmpleadoEntity
 
 class EmpleadosAdapter(
     private var items: List<EmpleadoEntity>,

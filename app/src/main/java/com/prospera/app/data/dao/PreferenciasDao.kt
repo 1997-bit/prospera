@@ -1,8 +1,9 @@
-package com.prospera.app.data
+package com.prospera.app.data.dao
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
+import com.prospera.app.data.entities.PreferenciasEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

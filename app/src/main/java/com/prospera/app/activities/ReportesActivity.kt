@@ -15,17 +15,17 @@ class ReportesActivity : AppCompatActivity() {
             finish()
         }
 
-        findViewById<android.view.View>(R.id.cardReportePlanilla).setOnClickListener {
-            startActivity(Intent(this, ReportePlanillaActivity::class.java))
-        }
-        findViewById<android.view.View>(R.id.cardReporteColaboradores).setOnClickListener {
-            startActivity(Intent(this, ReporteColaboradoresActivity::class.java))
-        }
-        findViewById<android.view.View>(R.id.cardReporteIndividual).setOnClickListener {
-            startActivity(Intent(this, ReporteIndividualActivity::class.java))
-        }
-        findViewById<android.view.View>(R.id.cardReporteCSS).setOnClickListener {
-            startActivity(Intent(this, ReporteCSSActivity::class.java))
+        abrirReporteAlTocar(R.id.cardReportePlanilla, R.string.reporte_planilla_nombre)
+        abrirReporteAlTocar(R.id.cardReporteColaboradores, R.string.reporte_colaboradores_nombre)
+        abrirReporteAlTocar(R.id.cardReporteIndividual, R.string.reporte_individual_nombre)
+        abrirReporteAlTocar(R.id.cardReporteCSS, R.string.reporte_css_nombre)
+    }
+
+    private fun abrirReporteAlTocar(cardId: Int, tituloResId: Int) {
+        findViewById<android.view.View>(cardId).setOnClickListener {
+            val intent = Intent(this, ReportePlaceholderActivity::class.java)
+            intent.putExtra(ReportePlaceholderActivity.EXTRA_TITULO_RES_ID, tituloResId)
+            startActivity(intent)
         }
     }
 }

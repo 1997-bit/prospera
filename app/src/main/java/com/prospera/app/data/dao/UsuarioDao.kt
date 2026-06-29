@@ -1,8 +1,9 @@
-package com.prospera.app.data
+package com.prospera.app.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.prospera.app.data.entities.UsuarioEntity
 
 @Dao
 interface UsuarioDao {

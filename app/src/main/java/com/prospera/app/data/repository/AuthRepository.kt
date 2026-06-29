@@ -1,6 +1,10 @@
-package com.prospera.app.data
+package com.prospera.app.data.repository
 
 import android.content.Context
+import com.prospera.app.data.AppDatabase
+import com.prospera.app.data.entities.EmpresaEntity
+import com.prospera.app.data.entities.UsuarioEmpresaEntity
+import com.prospera.app.data.entities.UsuarioEntity
 import org.mindrot.jbcrypt.BCrypt
 
 class AuthRepository(context: Context) {

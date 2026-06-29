@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.prospera.app.R
 import com.prospera.app.adapters.ActividadAdapter
 import com.prospera.app.data.ActividadReciente
-import com.prospera.app.data.AuthRepository
-import com.prospera.app.data.EmpleadoRepository
+import com.prospera.app.data.repository.AuthRepository
+import com.prospera.app.data.repository.EmpleadoRepository
 import com.prospera.app.data.ResumenMensual
 import com.prospera.app.utils.Moneda
 import com.prospera.app.utils.SessionManager

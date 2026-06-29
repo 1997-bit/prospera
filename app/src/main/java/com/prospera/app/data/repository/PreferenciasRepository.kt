@@ -1,6 +1,8 @@
-package com.prospera.app.data
+package com.prospera.app.data.repository
 
 import android.content.Context
+import com.prospera.app.data.AppDatabase
+import com.prospera.app.data.entities.PreferenciasEntity
 import kotlinx.coroutines.flow.Flow
 
 class PreferenciasRepository(context: Context) {

@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.prospera.app.R
-import com.prospera.app.data.EmpleadoEntity
-import com.prospera.app.data.EmpleadoRepository
+import com.prospera.app.data.entities.EmpleadoEntity
+import com.prospera.app.data.repository.EmpleadoRepository
 import com.prospera.app.utils.SessionManager
 import kotlinx.coroutines.launch
 

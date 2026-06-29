@@ -1,8 +1,11 @@
-package com.prospera.app.data
+package com.prospera.app.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.prospera.app.data.UsuarioConRol
+import com.prospera.app.data.entities.EmpresaEntity
+import com.prospera.app.data.entities.UsuarioEmpresaEntity
 
 @Dao
 interface UsuarioEmpresaDao {
@@ -32,10 +35,3 @@ interface UsuarioEmpresaDao {
     """)
     suspend fun usuariosDeEmpresa(empresaId: Long): List<UsuarioConRol>
 }
-
-data class UsuarioConRol(
-    val id: Long,
-    val nombre: String,
-    val email: String,
-    val rol: String
-)

@@ -1,4 +1,4 @@
-package com.prospera.app.data
+package com.prospera.app.data.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -10,8 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.prospera.app.R
-import com.prospera.app.data.PreferenciasEntity
-import com.prospera.app.data.PreferenciasRepository
+import com.prospera.app.data.entities.PreferenciasEntity
+import com.prospera.app.data.repository.PreferenciasRepository
 import com.prospera.app.utils.SessionManager
 import kotlinx.coroutines.launch
 

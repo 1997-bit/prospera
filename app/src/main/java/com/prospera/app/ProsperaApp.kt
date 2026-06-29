@@ -2,7 +2,7 @@ package com.prospera.app
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.prospera.app.data.PreferenciasRepository
+import com.prospera.app.data.repository.PreferenciasRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

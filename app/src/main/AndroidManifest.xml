@@ -28,10 +28,7 @@
         <activity android:name=".activities.NuevoEmpleadoActivity" android:exported="false" />
         <activity android:name=".activities.PlanillaActivity" android:exported="false" />
         <activity android:name=".activities.ReportesActivity" android:exported="false" />
-        <activity android:name=".activities.ReportePlanillaActivity" android:exported="false" />
-        <activity android:name=".activities.ReporteColaboradoresActivity" android:exported="false" />
-        <activity android:name=".activities.ReporteIndividualActivity" android:exported="false" />
-        <activity android:name=".activities.ReporteCSSActivity" android:exported="false" />
+        <activity android:name=".activities.ReportePlaceholderActivity" android:exported="false" />
 
     </application>
 </manifest>

@@ -13,7 +13,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import com.prospera.app.R
 import com.prospera.app.adapters.UsuariosAdapter
-import com.prospera.app.data.AuthRepository
+import com.prospera.app.data.repository.AuthRepository
 import com.prospera.app.data.UsuarioConRol
 import com.prospera.app.utils.SessionManager
 import kotlinx.coroutines.launch

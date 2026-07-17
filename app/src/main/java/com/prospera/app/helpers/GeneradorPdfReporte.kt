@@ -1,8 +1,10 @@
 package com.prospera.app.helpers
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.pdf.PdfDocument
 import com.prospera.app.data.ConsolidadoMensualRow
 import java.io.File
@@ -56,12 +58,7 @@ object GeneradorPdfReporte {
             strokeWidth = 1f
         }
 
-        var y = MARGEN
-
-        canvas.drawText("Planilla Consolidada", MARGEN, y, paintTitulo)
-        y += 20f
-        canvas.drawText(periodoTexto, MARGEN, y, paintSubtitulo)
-        y += 30f
+        var y = dibujarEncabezadoReporte(canvas, "Planilla Consolidada", periodoTexto, paintTitulo, paintSubtitulo)
 
         // Encabezados de columna
         val colNombre = MARGEN
@@ -140,13 +137,14 @@ object GeneradorPdfReporte {
         val paintTexto = Paint().apply { color = Color.BLACK; textSize = 9f }
         val paintLinea = Paint().apply { color = Color.LTGRAY; strokeWidth = 1f }
 
-        var y = MARGEN
-
-        canvas.drawText("Reporte de Colaboradores", MARGEN, y, paintTitulo)
-        y += 20f
         val activos = colaboradores.count { it.activo }
-        canvas.drawText("$activos activos · ${colaboradores.size - activos} inactivos", MARGEN, y, paintSubtitulo)
-        y += 30f
+        var y = dibujarEncabezadoReporte(
+            canvas,
+            "Reporte de Colaboradores",
+            "$activos activos · ${colaboradores.size - activos} inactivos",
+            paintTitulo,
+            paintSubtitulo
+        )
 
         val colNombre = MARGEN
         val colCedula = MARGEN + 130f
@@ -210,12 +208,13 @@ object GeneradorPdfReporte {
         val paintTexto = Paint().apply { color = Color.BLACK; textSize = 10f }
         val paintLinea = Paint().apply { color = Color.LTGRAY; strokeWidth = 1f }
 
-        var y = MARGEN
-
-        canvas.drawText("Expediente de Colaborador", MARGEN, y, paintTitulo)
-        y += 20f
-        canvas.drawText("${empleado.nombre} · ${if (empleado.activo) "Activo" else "Inactivo"}", MARGEN, y, paintSubtitulo)
-        y += 30f
+        var y = dibujarEncabezadoReporte(
+            canvas,
+            "Expediente de Colaborador",
+            "${empleado.nombre} · ${if (empleado.activo) "Activo" else "Inactivo"}",
+            paintTitulo,
+            paintSubtitulo
+        )
 
         canvas.drawText("Datos personales y laborales", MARGEN, y, paintSeccion)
         y += 6f
@@ -288,12 +287,13 @@ object GeneradorPdfReporte {
         val paintTexto = Paint().apply { color = Color.BLACK; textSize = 10f }
         val paintLinea = Paint().apply { color = Color.LTGRAY; strokeWidth = 1f }
 
-        var y = MARGEN
-
-        canvas.drawText("Reporte CSS (Caja de Seguro Social)", MARGEN, y, paintTitulo)
-        y += 20f
-        canvas.drawText(periodoTexto, MARGEN, y, paintSubtitulo)
-        y += 30f
+        var y = dibujarEncabezadoReporte(
+            canvas,
+            "Reporte CSS (Caja de Seguro Social)",
+            periodoTexto,
+            paintTitulo,
+            paintSubtitulo
+        )
 
         val colNombre = MARGEN
         val colCedula = MARGEN + 160f
@@ -340,5 +340,43 @@ object GeneradorPdfReporte {
         documento.close()
 
         return archivo
+    }
+
+    private fun dibujarEncabezadoReporte(
+        canvas: Canvas,
+        titulo: String,
+        subtitulo: String,
+        paintTitulo: Paint,
+        paintSubtitulo: Paint
+    ): Float {
+        dibujarLogoProspera(canvas, MARGEN, MARGEN - 8f, 84f)
+        canvas.drawText(titulo, MARGEN + 104f, MARGEN + 18f, paintTitulo)
+        canvas.drawText(subtitulo, MARGEN + 104f, MARGEN + 38f, paintSubtitulo)
+        return MARGEN + 82f
+    }
+
+    private fun dibujarLogoProspera(canvas: Canvas, x: Float, y: Float, size: Float) {
+        val paintNegro = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.BLACK; style = Paint.Style.FILL }
+        val paintVerde = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.rgb(102, 204, 102); style = Paint.Style.FILL }
+        val paintTexto = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.rgb(34, 34, 34)
+            textSize = size * 0.16f
+            isFakeBoldText = true
+            letterSpacing = 0.08f
+        }
+
+        canvas.drawRect(x + size * 0.37f, y, x + size * 0.86f, y + size * 0.46f, paintNegro)
+
+        val check = Path().apply {
+            moveTo(x + size * 0.14f, y + size * 0.38f)
+            lineTo(x + size * 0.28f, y + size * 0.24f)
+            lineTo(x + size * 0.40f, y + size * 0.36f)
+            lineTo(x + size * 0.70f, y + size * 0.06f)
+            lineTo(x + size * 0.85f, y + size * 0.21f)
+            lineTo(x + size * 0.40f, y + size * 0.66f)
+            close()
+        }
+        canvas.drawPath(check, paintVerde)
+        canvas.drawText("PROSPERA", x, y + size * 0.92f, paintTexto)
     }
 }

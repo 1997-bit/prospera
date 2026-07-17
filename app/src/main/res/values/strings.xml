@@ -27,6 +27,17 @@
     <string name="planilla_titulo">Cálculo de planilla</string>
     <string name="planilla_periodo">Período</string>
     <string name="planilla_btn_calcular">Calcular planilla</string>
+    <string name="planilla_quincena_1">1ra Quincena</string>
+    <string name="planilla_quincena_2">2da Quincena</string>
+    <string name="planilla_seccion_colaboradores">COLABORADORES</string>
+    <string name="planilla_colaboradores_conteo">%1$d colaboradores</string>
+    <string name="planilla_seccion_horas_extra">HORAS EXTRA</string>
+    <string name="planilla_ayuda_horas_extra">En horas trabajadas, no en balboas</string>
+    <string name="planilla_seccion_ingresos">INGRESOS ADICIONALES</string>
+    <string name="planilla_seccion_descuentos">DESCUENTOS</string>
+    <string name="planilla_ayuda_descuentos">Se limita automáticamente al 35% del bruto (Art. 161 CT)</string>
+    <string name="planilla_alerta_descuentos">Descuentos exceden el límite</string>
+    <string name="planilla_btn_recalcular">Recalcular</string>
 
     <string name="reportes_titulo">Reportes</string>
     <string name="reporte_planilla_nombre">Planilla consolidada</string>
@@ -54,10 +65,8 @@
     <string name="main_modulo_reportes">Reportes</string>
     <string name="main_modulo_reportes_desc">Informes y documentos</string>
 
-    <string name="main_actividad_label">ACTIVIDAD RECIENTE</string>
-    <string name="main_actividad_vacio">Sin actividad reciente</string>
     <string name="reportes_subtitulo">Elige el reporte a generar</string>
-    <string name="reportes_banner_info"><![CDATA[Todos los reportes incluyen opciones para <b>imprimir y enviar por correo</b>.]]></string>
+    <string name="reportes_banner_info">Todos los reportes incluyen opciones para imprimir y enviar por correo.</string>
 
     <string name="config_titulo">Configuración</string>
     <string name="config_seccion_perfil">PERFIL</string>
@@ -69,7 +78,6 @@
     <string name="config_seccion_empresa">DATOS DE LA EMPRESA</string>
     <string name="config_horas_semanales">Horas semanales</string>
     <string name="config_seccion_tasas">TASAS LEGALES</string>
-    <string name="config_tasas_advertencia">Verifica estos valores con la legislación vigente antes de modificar.</string>
     <string name="config_css_empleado">Seguro Social empleado (%)</string>
     <string name="config_seg_educativo">Seguro Educativo (%)</string>
     <string name="config_isr_deduccion">Deducción ISR casado (B/.)</string>

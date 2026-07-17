@@ -22,8 +22,6 @@ class DetallePlanillaAdapter(
         horasExtraNocturnas: Double,
         montoComision: Double,
         montoDietas: Double,
-        montoPrima: Double,
-        descMuebleria: Double,
         descAdelanto: Double,
         descAhorro: Double
     ) -> Unit
@@ -45,23 +43,23 @@ class DetallePlanillaAdapter(
 
         b.tvNombreEmpleado.text = fila.empleado.nombre
         b.tvCargo.text = fila.empleado.cargo
+        b.tvInicialesEmpleado.text = fila.empleado.nombre.trim().split(" ")
+            .filter { it.isNotBlank() }
+            .take(2)
+            .joinToString("") { it.first().uppercase() }
 
         // set sin disparar listeners de focus al re-bind
         b.etHorasDiurnas.setText(fila.detalle.horasExtraDiurnas.takeIf { it != 0.0 }?.toString() ?: "")
         b.etHorasNocturnas.setText(fila.detalle.horasExtraNocturnas.takeIf { it != 0.0 }?.toString() ?: "")
         b.etComision.setText(fila.detalle.montoComision.takeIf { it != 0.0 }?.toString() ?: "")
         b.etDietas.setText(fila.detalle.montoDietas.takeIf { it != 0.0 }?.toString() ?: "")
-        b.etPrima.setText(fila.detalle.montoPrima.takeIf { it != 0.0 }?.toString() ?: "")
-        b.etDescMuebleria.setText(fila.detalle.descMuebleria.takeIf { it != 0.0 }?.toString() ?: "")
         b.etDescAdelanto.setText(fila.detalle.descAdelanto.takeIf { it != 0.0 }?.toString() ?: "")
         b.etDescAhorro.setText(fila.detalle.descAhorro.takeIf { it != 0.0 }?.toString() ?: "")
 
-        b.tvResultado.text = "HE: ${Moneda.formatear(fila.detalle.montoHorasExtrasCalculado)}  " +
-                "Bonif: ${Moneda.formatear(fila.detalle.montoBonificacion)}  " +
-                "Bruto: ${Moneda.formatear(fila.detalle.salarioBruto)}  " +
-                "Desc: ${Moneda.formatear(fila.detalle.totalDescuentos)}  " +
-                "Neto: ${Moneda.formatear(fila.detalle.salarioNeto)}" +
-                if (fila.detalle.alertaDescExcede) "  Descuentos exceden el límite" else ""
+        b.tvBruto.text = Moneda.formatear(fila.detalle.salarioBruto)
+        b.tvDescuentos.text = "-${Moneda.formatear(fila.detalle.totalDescuentos)}"
+        b.tvNeto.text = Moneda.formatear(fila.detalle.salarioNeto)
+        b.tvAlerta.visibility = if (fila.detalle.alertaDescExcede) View.VISIBLE else View.GONE
 
         b.btnRecalcular.setOnClickListener {
             onRecalcular(
@@ -70,8 +68,6 @@ class DetallePlanillaAdapter(
                 b.etHorasNocturnas.text.toString().toDoubleOrNull() ?: 0.0,
                 b.etComision.text.toString().toDoubleOrNull() ?: 0.0,
                 b.etDietas.text.toString().toDoubleOrNull() ?: 0.0,
-                b.etPrima.text.toString().toDoubleOrNull() ?: 0.0,
-                b.etDescMuebleria.text.toString().toDoubleOrNull() ?: 0.0,
                 b.etDescAdelanto.text.toString().toDoubleOrNull() ?: 0.0,
                 b.etDescAhorro.text.toString().toDoubleOrNull() ?: 0.0
             )

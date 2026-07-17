@@ -23,7 +23,6 @@ object Constants {
 
     // Ingresos con exención parcial
     const val DIETAS_EXENCION = 0.25   // 25% salario mensual
-    const val PRIMA_EXENCION = 0.50   // 50% salario mensual
     const val COMISION_VENTAS = 0.02
 
     // Bonificación automática

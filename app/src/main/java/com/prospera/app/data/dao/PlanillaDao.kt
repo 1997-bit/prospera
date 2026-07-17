@@ -7,6 +7,7 @@ import androidx.room.Update
 import com.prospera.app.data.AporteCssRow
 import com.prospera.app.data.ConsolidadoMensualRow
 import com.prospera.app.data.HistorialPlanillaRow
+import com.prospera.app.data.ResumenMensualRow
 import com.prospera.app.data.entities.DetallePlanillaEntity
 import com.prospera.app.data.entities.PlanillaEntity
 
@@ -64,6 +65,16 @@ interface PlanillaDao {
     ORDER BY e.nombre ASC
 """)
     suspend fun consolidadoMensual(empresaId: Long, mes: Int, anio: Int): List<ConsolidadoMensualRow>
+
+    @Query("""
+    SELECT COALESCE(SUM(dp.salarioBruto), 0) AS totalBruto,
+           COALESCE(SUM(dp.totalDescuentos), 0) AS totalDescuentos,
+           COALESCE(SUM(dp.salarioNeto), 0) AS totalNeto
+    FROM detalle_planilla dp
+    JOIN planillas p ON p.id = dp.planillaId
+    WHERE p.empresaId = :empresaId AND p.mes = :mes AND p.anio = :anio
+""")
+    suspend fun resumenMensual(empresaId: Long, mes: Int, anio: Int): ResumenMensualRow
 
     @Query("""
     SELECT p.periodo AS periodo,

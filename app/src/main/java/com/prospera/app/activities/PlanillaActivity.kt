@@ -4,15 +4,18 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.prospera.app.R
 import com.prospera.app.adapters.DetallePlanillaAdapter
 import com.prospera.app.adapters.FilaPlanilla
 import com.prospera.app.data.AppDatabase
+import com.prospera.app.data.entities.DetallePlanillaEntity
 import com.prospera.app.data.repository.PlanillaRepository
 import com.prospera.app.data.repository.PreferenciasRepository
 import com.prospera.app.databinding.ActivityPlanillaBinding
+import com.prospera.app.utils.Moneda
 import com.prospera.app.utils.SessionManager
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -42,6 +45,8 @@ class PlanillaActivity : AppCompatActivity() {
         binding = ActivityPlanillaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.toolbar.setNavigationOnClickListener { finish() }
+
         val db = AppDatabase.getInstance(applicationContext)
         repository = PlanillaRepository(
             planillaDao = db.planillaDao(),
@@ -59,11 +64,11 @@ class PlanillaActivity : AppCompatActivity() {
 
         configurarSelectorPeriodo()
 
-        adapter = DetallePlanillaAdapter(emptyList()) { detalleId, heDiurnas, heNocturnas, com, die, pri, muebleria, adelanto, ahorro ->
+        adapter = DetallePlanillaAdapter(emptyList()) { detalleId, heDiurnas, heNocturnas, com, die, adelanto, ahorro ->
             lifecycleScope.launch {
                 try {
                     repository.actualizarLinea(
-                        detalleId, heDiurnas, heNocturnas, com, die, pri, muebleria, adelanto, ahorro
+                        detalleId, heDiurnas, heNocturnas, com, die, adelanto, ahorro
                     )
                     cargarDetalles()
                 } catch (e: IllegalStateException) {
@@ -86,30 +91,35 @@ class PlanillaActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnCargarPeriodo.setOnClickListener {
-            leerSeleccionPeriodo()
-            cargarPeriodo()
-        }
-
         cargarPeriodo()
     }
 
     private fun configurarSelectorPeriodo() {
-        binding.spMes.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, etiquetasMes)
-        binding.spMes.setSelection(mes - 1)
+        val actvMes = binding.actvMes
+        actvMes.setAdapter(ArrayAdapter(this, android.R.layout.simple_list_item_1, etiquetasMes))
+        actvMes.setText(etiquetasMes[mes - 1], false)
+        actvMes.setOnItemClickListener { _, _, position, _ ->
+            mes = position + 1
+            cargarPeriodo()
+        }
 
         val anios = (anio - 2..anio + 1).toList()
-        binding.spAnio.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, anios)
-        binding.spAnio.setSelection(anios.indexOf(anio))
+        val actvAnio = binding.actvAnio
+        actvAnio.setAdapter(ArrayAdapter(this, android.R.layout.simple_list_item_1, anios.map { it.toString() }))
+        actvAnio.setText(anio.toString(), false)
+        actvAnio.setOnItemClickListener { _, _, position, _ ->
+            anio = anios[position]
+            cargarPeriodo()
+        }
 
-        binding.spQuincena.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, etiquetasQuincena)
-        binding.spQuincena.setSelection(periodosDisponibles.indexOf(periodo))
-    }
-
-    private fun leerSeleccionPeriodo() {
-        mes = binding.spMes.selectedItemPosition + 1
-        anio = binding.spAnio.selectedItem as Int
-        periodo = periodosDisponibles[binding.spQuincena.selectedItemPosition]
+        val botonesQuincena = listOf(binding.btnQuincena1, binding.btnQuincena2)
+        botonesQuincena[periodosDisponibles.indexOf(periodo)].isChecked = true
+        binding.toggleQuincena.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
+            val posicion = if (checkedId == binding.btnQuincena1.id) 0 else 1
+            periodo = periodosDisponibles[posicion]
+            cargarPeriodo()
+        }
     }
 
     private fun cargarPeriodo() {
@@ -122,8 +132,17 @@ class PlanillaActivity : AppCompatActivity() {
     }
 
     private fun actualizarEncabezado(estado: String) {
-        binding.tvEstadoPlanilla.text = "$periodo · $mes/$anio · ${estado.uppercase()}"
+        binding.tvPeriodo.text = "${etiquetasQuincena[periodosDisponibles.indexOf(periodo)]} · ${etiquetasMes[mes - 1]} $anio"
         binding.btnCalcular.isEnabled = estado == "borrador"
+
+        val pagada = estado == "pagada"
+        binding.tvEstadoPlanilla.text = estado.uppercase()
+        binding.tvEstadoPlanilla.setBackgroundResource(
+            if (pagada) R.drawable.bg_chip_activo else R.drawable.bg_chip_inactivo
+        )
+        binding.tvEstadoPlanilla.setTextColor(
+            ContextCompat.getColor(this, if (pagada) R.color.md_on_primary_container else R.color.md_on_surface_variant)
+        )
     }
 
     private suspend fun cargarDetalles() {
@@ -134,5 +153,14 @@ class PlanillaActivity : AppCompatActivity() {
             FilaPlanilla(detalle, empleado)
         }
         adapter.actualizarFilas(filas)
+        pintarResumen(detalles)
+    }
+
+    private fun pintarResumen(detalles: List<DetallePlanillaEntity>) {
+        binding.tvColaboradoresResumen.text =
+            getString(R.string.planilla_colaboradores_conteo, detalles.size)
+        binding.tvTotalBruto.text = Moneda.formatear(detalles.sumOf { it.salarioBruto })
+        binding.tvTotalDescuentos.text = Moneda.formatear(detalles.sumOf { it.totalDescuentos })
+        binding.tvTotalNeto.text = Moneda.formatear(detalles.sumOf { it.salarioNeto })
     }
 }

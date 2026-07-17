@@ -13,6 +13,7 @@ import com.prospera.app.R
 import com.prospera.app.data.AppDatabase
 import com.prospera.app.data.entities.EmpresaEntity
 import com.prospera.app.data.entities.PreferenciasEntity
+import com.prospera.app.data.repository.AuthRepository
 import com.prospera.app.data.repository.PreferenciasRepository
 import com.prospera.app.utils.SessionManager
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 class ConfiguracionActivity : AppCompatActivity() {
 
     private lateinit var repo: PreferenciasRepository
+    private lateinit var authRepo: AuthRepository
     private var prefsActuales: PreferenciasEntity = PreferenciasEntity()
     private var empresaActual: EmpresaEntity? = null
 
@@ -28,6 +30,7 @@ class ConfiguracionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_configuracion)
 
         repo = PreferenciasRepository(applicationContext)
+        authRepo = AuthRepository(applicationContext)
 
         findViewById<MaterialToolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
 
@@ -42,6 +45,18 @@ class ConfiguracionActivity : AppCompatActivity() {
     private fun cargarPreferencias() {
         lifecycleScope.launch {
             prefsActuales = repo.obtener()
+
+            if (prefsActuales.correoUsuario.isBlank()) {
+                val usuarioId = SessionManager.getUsuarioId(this@ConfiguracionActivity)
+                val usuario = authRepo.usuarioDao.buscarPorId(usuarioId)
+                if (usuario != null) {
+                    prefsActuales = prefsActuales.copy(
+                        nombreUsuario = usuario.nombre,
+                        correoUsuario = usuario.email
+                    )
+                }
+            }
+
             pintarUI(prefsActuales)
         }
     }

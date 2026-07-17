@@ -15,46 +15,16 @@
             android:name=".activities.ReporteCssActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.AporteCssAdapter"
-            android:exported="false" />
-        <activity
             android:name=".activities.ExpedienteColaboradorActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ExpedienteColaboradorActivity"
-            android:exported="false" />
-        <activity
-            android:name=".adapters.HistorialPlanillaAdapter"
             android:exported="false" />
         <activity
             android:name=".activities.ReporteIndividualActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ReporteIndividualActivity"
-            android:exported="false" />
-        <activity
-            android:name=".adapters.ColaboradorSeleccionableAdapter"
-            android:exported="false" />
-        <activity
             android:name=".activities.ReporteColaboradoresActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ReporteColaboradoresActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ReporteColaboradorAdapter"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ReporteColaboresAdaptador"
             android:exported="false" />
         <activity
             android:name=".activities.ReportePlanillaConsolidadaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.GeneradorPdfReporte"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ConsolidadoMensualAdapter"
             android:exported="false" />
         <activity
             android:name=".activities.LoginActivity"
@@ -92,8 +62,6 @@
         <activity
             android:name=".activities.ReportePlaceholderActivity"
             android:exported="false" />
-
-        <activity android:name=".activities.ReporteCssActivity" android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -2,6 +2,7 @@ package com.prospera.app.data.repository
 
 import com.prospera.app.data.AporteCssRow
 import com.prospera.app.data.ConsolidadoMensualRow
+import com.prospera.app.data.ResumenMensualRow
 import com.prospera.app.data.dao.EmpleadoDao
 import com.prospera.app.data.dao.EmpresaDao
 import com.prospera.app.data.dao.PlanillaDao
@@ -55,8 +56,6 @@ class PlanillaRepository(
                 horasExtraNocturnas = 0.0,
                 montoComision = 0.0,
                 montoDietas = 0.0,
-                montoPrima = 0.0,
-                descMuebleria = 0.0,
                 descAdelanto = 0.0,
                 descAhorro = 0.0
             )
@@ -72,8 +71,6 @@ class PlanillaRepository(
         horasExtraNocturnas: Double,
         montoComision: Double,
         montoDietas: Double,
-        montoPrima: Double,
-        descMuebleria: Double,
         descAdelanto: Double,
         descAhorro: Double
     ) {
@@ -98,8 +95,6 @@ class PlanillaRepository(
             horasExtraNocturnas = horasExtraNocturnas,
             montoComision = montoComision,
             montoDietas = montoDietas,
-            montoPrima = montoPrima,
-            descMuebleria = descMuebleria,
             descAdelanto = descAdelanto,
             descAhorro = descAhorro
         ).copy(id = detalleId)
@@ -123,6 +118,9 @@ class PlanillaRepository(
     suspend fun consolidadoMensual(empresaId: Long, mes: Int, anio: Int): List<ConsolidadoMensualRow> =
         planillaDao.consolidadoMensual(empresaId, mes, anio)
 
+    suspend fun resumenMensual(empresaId: Long, mes: Int, anio: Int): ResumenMensualRow =
+        planillaDao.resumenMensual(empresaId, mes, anio)
+
     suspend fun reporteCssMensual(empresaId: Long, mes: Int, anio: Int): List<AporteCssRow> =
         planillaDao.reporteCssMensual(empresaId, mes, anio)
     // --- privado ---
@@ -136,15 +134,12 @@ class PlanillaRepository(
         horasExtraNocturnas: Double,
         montoComision: Double,
         montoDietas: Double,
-        montoPrima: Double,
-        descMuebleria: Double,
         descAdelanto: Double,
         descAhorro: Double
     ): DetallePlanillaEntity {
         val ingresos = buildList {
             if (montoComision > 0) add(IngresoInput(tipo = "comision", monto = montoComision))
             if (montoDietas > 0) add(IngresoInput(tipo = "dietas", monto = montoDietas))
-            if (montoPrima > 0) add(IngresoInput(tipo = "prima", monto = montoPrima))
         }
 
         val resultado = calculadora.calcularQuincena(
@@ -155,7 +150,6 @@ class PlanillaRepository(
             horasExtraDiurnas = horasExtraDiurnas,
             horasExtraNocturnas = horasExtraNocturnas,
             ingresos = ingresos,
-            descMuebleria = descMuebleria,
             descAdelanto = descAdelanto,
             descAhorro = descAhorro,
             cssEmpleado = prefs.cssEmpleado,
@@ -170,8 +164,6 @@ class PlanillaRepository(
             horasExtraNocturnas = horasExtraNocturnas,
             montoComision = montoComision,
             montoDietas = montoDietas,
-            montoPrima = montoPrima,
-            descMuebleria = descMuebleria,
             descAdelanto = descAdelanto,
             descAhorro = descAhorro,
             salarioBaseQuincena = resultado.salarioBaseQuincena,

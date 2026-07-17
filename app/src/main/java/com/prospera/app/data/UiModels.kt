@@ -47,6 +47,12 @@ data class AporteCssRow(
     val totalCss: Double get() = seguroSocialMes + seguroEducativoMes
 }
 
+data class ResumenMensualRow(
+    val totalBruto: Double,
+    val totalDescuentos: Double,
+    val totalNeto: Double
+)
+
 data class ResumenMensual(
     val mesAnio: String, // "Junio 2026"
     val totalBruto: Double,

@@ -63,7 +63,7 @@ class CalculadoraPlanilla(
      * @param horasExtraDiurnas horas extra trabajadas en jornada diurna del período
      * @param horasExtraNocturnas horas extra trabajadas en jornada nocturna del período
      * @param ingresos lista de ingresos variables del período
-     * @param descMuebleria, descAdelanto, descAhorro descuentos itemizados del período (Art. 161 CT)
+     * @param descAdelanto, descAhorro descuentos itemizados del período (Art. 161 CT)
      * @param cssEmpleado, segEducativo, isrDeduccionCasado tasas legales configurables (Configuración)
      */
     fun calcularQuincena(
@@ -74,7 +74,6 @@ class CalculadoraPlanilla(
         horasExtraDiurnas: Double = 0.0,
         horasExtraNocturnas: Double = 0.0,
         ingresos: List<IngresoInput> = emptyList(),
-        descMuebleria: Double = 0.0,
         descAdelanto: Double = 0.0,
         descAhorro: Double = 0.0,
         cssEmpleado: Double = Constants.CSS_EMPLEADO,
@@ -100,7 +99,7 @@ class CalculadoraPlanilla(
         val segEdu = redondear(baseCSS * segEducativo)
         val isr = calculadoraIsr.calcularQuincena(bruto, estadoCivil, isrDeduccionCasado)
 
-        val otrosDescuentos = redondear(descMuebleria + descAdelanto + descAhorro)
+        val otrosDescuentos = redondear(descAdelanto + descAhorro)
         val otrosDescAjustados = redondear(minOf(otrosDescuentos, bruto * Constants.MAX_OTROS_DESC_PCT))
         val totalDesc = redondear(css + segEdu + isr + otrosDescAjustados)
 
@@ -143,7 +142,6 @@ class CalculadoraPlanilla(
             val resultado = when (ingreso.tipo) {
                 "comision", "bonificacion" -> calcularComision(ingreso.monto)
                 "dietas" -> calcularConExencion(ingreso.monto, salMensual * Constants.DIETAS_EXENCION)
-                "prima" -> calcularConExencion(ingreso.monto, salMensual * Constants.PRIMA_EXENCION)
                 else -> Triple(ingreso.monto, 0.0, 0.0)
             }
 
@@ -173,7 +171,7 @@ class CalculadoraPlanilla(
         Triple(monto, 0.0, 0.0)
 
     /**
-     * Ingreso con exención parcial (dietas, prima):
+     * Ingreso con exención parcial (dietas):
      * hasta umbral -> exento (sin_descuento); excedente -> gravable + CSS
      */
     private fun calcularConExencion(monto: Double, umbral: Double): Triple<Double, Double, Double> {

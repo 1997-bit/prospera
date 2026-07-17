@@ -5,22 +5,23 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.prospera.app.R
-import com.prospera.app.adapters.ActividadAdapter
-import com.prospera.app.data.ActividadReciente
+import com.prospera.app.data.AppDatabase
 import com.prospera.app.data.repository.AuthRepository
 import com.prospera.app.data.repository.EmpleadoRepository
+import com.prospera.app.data.repository.PlanillaRepository
+import com.prospera.app.data.repository.PreferenciasRepository
 import com.prospera.app.data.ResumenMensual
 import com.prospera.app.utils.Moneda
 import com.prospera.app.utils.SessionManager
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var authRepo: AuthRepository
     private lateinit var empleadoRepo: EmpleadoRepository
+    private lateinit var planillaRepo: PlanillaRepository
     private var empresaId: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,11 +36,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         authRepo = AuthRepository(applicationContext)
         empleadoRepo = EmpleadoRepository(applicationContext)
+        val db = AppDatabase.getInstance(applicationContext)
+        planillaRepo = PlanillaRepository(
+            planillaDao = db.planillaDao(),
+            empleadoDao = db.empleadoDao(),
+            empresaDao = db.empresaDao(),
+            preferenciasRepository = PreferenciasRepository(applicationContext)
+        )
         empresaId = SessionManager.getEmpresaId(this)
 
         pintarHeader()
         cargarResumen()
-        pintarActividad(obtenerActividadReciente())
         configurarNavegacion()
     }
 
@@ -66,9 +73,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun cargarResumen() {
         lifecycleScope.launch {
-            val base = ResumenMensual.vacio()
-            val total = empleadoRepo.listarActivos(empresaId).size
-            val resumen = base.copy(colaboradoresActivos = total)
+            val cal = Calendar.getInstance()
+            val mes = cal.get(Calendar.MONTH) + 1
+            val anio = cal.get(Calendar.YEAR)
+
+            val fila = planillaRepo.resumenMensual(empresaId, mes, anio)
+            val totalActivos = empleadoRepo.listarActivos(empresaId).size
+
+            val resumen = ResumenMensual.vacio().copy(
+                totalBruto = fila.totalBruto,
+                totalDescuentos = fila.totalDescuentos,
+                totalNeto = fila.totalNeto,
+                colaboradoresActivos = totalActivos
+            )
             pintarResumen(resumen)
         }
     }
@@ -83,24 +100,6 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.tvColaboradoresActivos).text =
             getString(R.string.main_resumen_colaboradores, resumen.colaboradoresActivos)
-    }
-
-    /** TODO: reemplazar por consulta real a Room (historial) cuando exista. */
-    private fun obtenerActividadReciente(): List<ActividadReciente> = emptyList()
-
-    private fun pintarActividad(items: List<ActividadReciente>) {
-        val rv = findViewById<RecyclerView>(R.id.rvActividad)
-        val tvVacio = findViewById<TextView>(R.id.tvActividadVacio)
-
-        if (items.isEmpty()) {
-            rv.visibility = android.view.View.GONE
-            tvVacio.visibility = android.view.View.VISIBLE
-        } else {
-            rv.visibility = android.view.View.VISIBLE
-            tvVacio.visibility = android.view.View.GONE
-            rv.layoutManager = LinearLayoutManager(this)
-            rv.adapter = ActividadAdapter(items)
-        }
     }
 
     private fun configurarNavegacion() {

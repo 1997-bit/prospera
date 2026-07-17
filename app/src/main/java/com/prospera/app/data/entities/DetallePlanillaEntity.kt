@@ -36,8 +36,6 @@ data class DetallePlanillaEntity(
     val horasExtraNocturnas: Double = 0.0,
     val montoComision: Double = 0.0,
     val montoDietas: Double = 0.0,
-    val montoPrima: Double = 0.0,
-    val descMuebleria: Double = 0.0,
     val descAdelanto: Double = 0.0,
     val descAhorro: Double = 0.0,
 

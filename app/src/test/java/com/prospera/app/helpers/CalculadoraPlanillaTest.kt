@@ -47,7 +47,7 @@ class CalculadoraPlanillaTest {
     fun `otros descuentos no exceden 35 pct Art161`() {
         val resultado = calculadora.calcularQuincena(
             salarioBase = 1000.0,
-            otrosDescuentos = 9999.0   // intento de exceder
+            descAdelanto = 9999.0   // intento de exceder
         )
         val limite = resultado.salarioBruto * 0.35
         assertTrue(resultado.otrosDescuentos <= limite)
@@ -94,7 +94,7 @@ class CalculadoraPlanillaTest {
         val brutoAprox = 500.0
         val resultado = calculadora.calcularQuincena(
             salarioBase = 1000.0,
-            otrosDescuentos = brutoAprox * 0.36
+            descAdelanto = brutoAprox * 0.36
         )
         // el sistema debe haberlo cortado, alerta = false porque ya fue limitado
         assertFalse(resultado.alertaDescExcede)

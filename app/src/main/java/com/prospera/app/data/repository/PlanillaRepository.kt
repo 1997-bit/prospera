@@ -26,7 +26,10 @@ class PlanillaRepository(
         mes: Int,
         anio: Int
     ): PlanillaEntity {
-        planillaDao.buscar(empresaId, periodo, mes, anio)?.let { return it }
+        planillaDao.buscar(empresaId, periodo, mes, anio)?.let { existente ->
+            if (existente.estado == "borrador") sincronizarDetalleBorrador(existente)
+            return existente
+        }
 
         val empresa = empresaDao.buscarPorId(empresaId)
             ?: error("Empresa $empresaId no encontrada")
@@ -57,6 +60,32 @@ class PlanillaRepository(
         if (detalles.isNotEmpty()) planillaDao.insertarDetalles(detalles)
 
         return planillaDao.buscarPorId(nuevaId)!!
+    }
+
+    private suspend fun sincronizarDetalleBorrador(planilla: PlanillaEntity) {
+        val empresa = empresaDao.buscarPorId(planilla.empresaId)
+            ?: error("Empresa ${planilla.empresaId} no encontrada")
+
+        planillaDao.eliminarDetallesDeEmpleadosInactivos(planilla.id, planilla.empresaId)
+
+        val detallesActuales = planillaDao.detallesDePlanilla(planilla.id)
+        val empleadosConDetalle = detallesActuales.map { it.empleadoId }.toSet()
+        val detallesFaltantes = empleadoDao.listarActivos(planilla.empresaId)
+            .filterNot { it.id in empleadosConDetalle }
+            .map { empleado ->
+                construirDetalle(
+                    planillaId = planilla.id,
+                    empleado = empleado,
+                    empresa = empresa,
+                    montoHorasExtrasInput = 0.0,
+                    montoComision = 0.0,
+                    montoDietas = 0.0,
+                    montoPrima = 0.0,
+                    otrosDescuentosInput = 0.0
+                )
+            }
+
+        if (detallesFaltantes.isNotEmpty()) planillaDao.insertarDetalles(detallesFaltantes)
     }
 
     suspend fun actualizarLinea(

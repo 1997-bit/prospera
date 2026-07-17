@@ -29,6 +29,9 @@
     <string name="planilla_tab_historial">Historial</string>
     <string name="planilla_tab_resumen">Resumen</string>
     <string name="planilla_periodo">Período</string>
+    <string name="planilla_mes">Mes</string>
+    <string name="planilla_anio">Año</string>
+    <string name="planilla_btn_abrir_periodo">Abrir planilla seleccionada</string>
     <string name="planilla_btn_calcular">Calcular planilla</string>
 
     <string name="reportes_titulo">Reportes</string>

@@ -10,6 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.prospera.app.R
+import com.prospera.app.data.AppDatabase
+import com.prospera.app.data.entities.EmpresaEntity
 import com.prospera.app.data.entities.PreferenciasEntity
 import com.prospera.app.data.repository.PreferenciasRepository
 import com.prospera.app.utils.SessionManager
@@ -19,6 +21,7 @@ class ConfiguracionActivity : AppCompatActivity() {
 
     private lateinit var repo: PreferenciasRepository
     private var prefsActuales: PreferenciasEntity = PreferenciasEntity()
+    private var empresaActual: EmpresaEntity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +32,10 @@ class ConfiguracionActivity : AppCompatActivity() {
         findViewById<MaterialToolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
 
         cargarPreferencias()
+        cargarEmpresa()
         configurarPerfil()
         configurarTasasLegales()
+        configurarDatosEmpresa()
         configurarCerrarSesion()
     }
 
@@ -38,6 +43,16 @@ class ConfiguracionActivity : AppCompatActivity() {
         lifecycleScope.launch {
             prefsActuales = repo.obtener()
             pintarUI(prefsActuales)
+        }
+    }
+
+    private fun cargarEmpresa() {
+        lifecycleScope.launch {
+            val empresaId = SessionManager.getEmpresaId(this@ConfiguracionActivity)
+            val empresa = AppDatabase.getInstance(applicationContext).empresaDao().buscarPorId(empresaId)
+                ?: return@launch
+            empresaActual = empresa
+            findViewById<EditText>(R.id.etHorasSemanales).setText(empresa.horasSemanales.toString())
         }
     }
 
@@ -88,6 +103,25 @@ class ConfiguracionActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 repo.actualizarPerfil(nombre, correo)
+            }
+        }
+    }
+
+    private fun configurarDatosEmpresa() {
+        findViewById<Button>(R.id.btnGuardarEmpresa).setOnClickListener {
+            val etHoras = findViewById<EditText>(R.id.etHorasSemanales)
+            val horas = etHoras.text.toString().toDoubleOrNull()
+
+            if (horas == null || horas <= 0) {
+                etHoras.error = "Requerido"
+                return@setOnClickListener
+            }
+
+            val empresa = empresaActual ?: return@setOnClickListener
+            lifecycleScope.launch {
+                val actualizada = empresa.copy(horasSemanales = horas)
+                AppDatabase.getInstance(applicationContext).empresaDao().actualizar(actualizada)
+                empresaActual = actualizada
             }
         }
     }

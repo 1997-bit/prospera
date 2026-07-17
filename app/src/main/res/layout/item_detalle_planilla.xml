@@ -29,19 +29,38 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilHorasExtras"
+        android:id="@+id/tilHorasDiurnas"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Horas extras ($)"
+        android:hint="Horas extra diurnas"
         app:layout_constraintTop_toBottomOf="@id/tvCargo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tilComision"
+        app:layout_constraintEnd_toStartOf="@id/tilHorasNocturnas"
         app:layout_constraintHorizontal_chainStyle="spread_inside">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etHorasExtras"
+            android:id="@+id/etHorasDiurnas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilHorasNocturnas"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="Horas extra nocturnas"
+        app:layout_constraintTop_toBottomOf="@id/tvCargo"
+        app:layout_constraintStart_toEndOf="@id/tilHorasDiurnas"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etHorasNocturnas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
@@ -52,12 +71,11 @@
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:hint="Comisión"
-        app:layout_constraintTop_toBottomOf="@id/tvCargo"
-        app:layout_constraintStart_toEndOf="@id/tilHorasExtras"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/tilHorasDiurnas"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tilDietas">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etComision"
@@ -71,11 +89,12 @@
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:hint="Dietas"
-        app:layout_constraintTop_toBottomOf="@id/tilHorasExtras"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tilPrima">
+        app:layout_constraintTop_toBottomOf="@id/tilHorasNocturnas"
+        app:layout_constraintStart_toEndOf="@id/tilComision"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etDietas"
@@ -104,18 +123,55 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilOtrosDescuentos"
+        android:id="@+id/tilDescMuebleria"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Otros descuentos"
-        app:layout_constraintTop_toBottomOf="@id/tilDietas"
+        android:hint="Mueblería"
+        app:layout_constraintTop_toBottomOf="@id/tilPrima"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tilDescAdelanto">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDescMuebleria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilDescAdelanto"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="Adelanto"
+        app:layout_constraintTop_toBottomOf="@id/tilPrima"
+        app:layout_constraintStart_toEndOf="@id/tilDescMuebleria"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDescAdelanto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilDescAhorro"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Ahorro"
+        app:layout_constraintTop_toBottomOf="@id/tilDescMuebleria"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etOtrosDescuentos"
+            android:id="@+id/etDescAhorro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
@@ -128,7 +184,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Recalcular"
-        app:layout_constraintTop_toBottomOf="@id/tilOtrosDescuentos" />
+        app:layout_constraintTop_toBottomOf="@id/tilDescAhorro" />
 
     <TextView
         android:id="@+id/tvResultado"

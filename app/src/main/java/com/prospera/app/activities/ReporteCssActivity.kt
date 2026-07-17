@@ -23,6 +23,7 @@ import com.prospera.app.adapters.AporteCssAdapter
 import com.prospera.app.data.AppDatabase
 import com.prospera.app.data.AporteCssRow
 import com.prospera.app.data.repository.PlanillaRepository
+import com.prospera.app.data.repository.PreferenciasRepository
 import com.prospera.app.helpers.GeneradorPdfReporte
 import com.prospera.app.utils.SessionManager
 import kotlinx.coroutines.launch
@@ -59,7 +60,8 @@ class ReporteCssActivity : AppCompatActivity() {
         repository = PlanillaRepository(
             planillaDao = db.planillaDao(),
             empleadoDao = db.empleadoDao(),
-            empresaDao = db.empresaDao()
+            empresaDao = db.empresaDao(),
+            preferenciasRepository = PreferenciasRepository(applicationContext)
         )
         empresaId = SessionManager.getEmpresaId(this)
 

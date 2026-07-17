@@ -30,7 +30,7 @@ import com.prospera.app.data.entities.UsuarioEntity
         PlanillaEntity::class,
         DetallePlanillaEntity::class
     ],
-    version = 4,
+    version = 7,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -94,6 +94,131 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS detalle_planilla_new (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        planillaId INTEGER NOT NULL,
+                        empleadoId INTEGER NOT NULL,
+                        horasExtraDiurnas REAL NOT NULL,
+                        horasExtraNocturnas REAL NOT NULL,
+                        montoComision REAL NOT NULL,
+                        montoDietas REAL NOT NULL,
+                        montoPrima REAL NOT NULL,
+                        otrosDescuentosInput REAL NOT NULL,
+                        salarioBaseQuincena REAL NOT NULL,
+                        valorHora REAL NOT NULL,
+                        montoHorasExtrasCalculado REAL NOT NULL,
+                        otrosIngresosGravables REAL NOT NULL,
+                        otrosIngresosSinDescuento REAL NOT NULL,
+                        salarioBruto REAL NOT NULL,
+                        descSeguroSocial REAL NOT NULL,
+                        descSeguroEducativo REAL NOT NULL,
+                        descISR REAL NOT NULL,
+                        otrosDescuentos REAL NOT NULL,
+                        totalDescuentos REAL NOT NULL,
+                        salarioNeto REAL NOT NULL,
+                        alertaDescExcede INTEGER NOT NULL,
+                        FOREIGN KEY(planillaId) REFERENCES planillas(id) ON DELETE CASCADE,
+                        FOREIGN KEY(empleadoId) REFERENCES empleados(id) ON DELETE NO ACTION
+                    )
+                """.trimIndent())
+                db.execSQL("""
+                    INSERT INTO detalle_planilla_new (
+                        id, planillaId, empleadoId,
+                        horasExtraDiurnas, horasExtraNocturnas,
+                        montoComision, montoDietas, montoPrima, otrosDescuentosInput,
+                        salarioBaseQuincena, valorHora, montoHorasExtrasCalculado,
+                        otrosIngresosGravables, otrosIngresosSinDescuento,
+                        salarioBruto, descSeguroSocial, descSeguroEducativo, descISR,
+                        otrosDescuentos, totalDescuentos, salarioNeto, alertaDescExcede
+                    )
+                    SELECT
+                        id, planillaId, empleadoId,
+                        0.0, 0.0,
+                        montoComision, montoDietas, montoPrima, otrosDescuentosInput,
+                        salarioBaseQuincena, valorHora, 0.0,
+                        otrosIngresosGravables, otrosIngresosSinDescuento,
+                        salarioBruto, descSeguroSocial, descSeguroEducativo, descISR,
+                        otrosDescuentos, totalDescuentos, salarioNeto, alertaDescExcede
+                    FROM detalle_planilla
+                """.trimIndent())
+                db.execSQL("DROP TABLE detalle_planilla")
+                db.execSQL("ALTER TABLE detalle_planilla_new RENAME TO detalle_planilla")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_detalle_planilla_planillaId_empleadoId ON detalle_planilla(planillaId, empleadoId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_detalle_planilla_empleadoId ON detalle_planilla(empleadoId)")
+            }
+        }
+
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE detalle_planilla ADD COLUMN montoBonificacion REAL NOT NULL DEFAULT 0.0")
+            }
+        }
+
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS detalle_planilla_new (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        planillaId INTEGER NOT NULL,
+                        empleadoId INTEGER NOT NULL,
+                        horasExtraDiurnas REAL NOT NULL,
+                        horasExtraNocturnas REAL NOT NULL,
+                        montoComision REAL NOT NULL,
+                        montoDietas REAL NOT NULL,
+                        montoPrima REAL NOT NULL,
+                        descMuebleria REAL NOT NULL,
+                        descAdelanto REAL NOT NULL,
+                        descAhorro REAL NOT NULL,
+                        salarioBaseQuincena REAL NOT NULL,
+                        valorHora REAL NOT NULL,
+                        montoHorasExtrasCalculado REAL NOT NULL,
+                        montoBonificacion REAL NOT NULL,
+                        otrosIngresosGravables REAL NOT NULL,
+                        otrosIngresosSinDescuento REAL NOT NULL,
+                        salarioBruto REAL NOT NULL,
+                        descSeguroSocial REAL NOT NULL,
+                        descSeguroEducativo REAL NOT NULL,
+                        descISR REAL NOT NULL,
+                        otrosDescuentos REAL NOT NULL,
+                        totalDescuentos REAL NOT NULL,
+                        salarioNeto REAL NOT NULL,
+                        alertaDescExcede INTEGER NOT NULL,
+                        FOREIGN KEY(planillaId) REFERENCES planillas(id) ON DELETE CASCADE,
+                        FOREIGN KEY(empleadoId) REFERENCES empleados(id) ON DELETE NO ACTION
+                    )
+                """.trimIndent())
+                db.execSQL("""
+                    INSERT INTO detalle_planilla_new (
+                        id, planillaId, empleadoId,
+                        horasExtraDiurnas, horasExtraNocturnas,
+                        montoComision, montoDietas, montoPrima,
+                        descMuebleria, descAdelanto, descAhorro,
+                        salarioBaseQuincena, valorHora, montoHorasExtrasCalculado, montoBonificacion,
+                        otrosIngresosGravables, otrosIngresosSinDescuento,
+                        salarioBruto, descSeguroSocial, descSeguroEducativo, descISR,
+                        otrosDescuentos, totalDescuentos, salarioNeto, alertaDescExcede
+                    )
+                    SELECT
+                        id, planillaId, empleadoId,
+                        horasExtraDiurnas, horasExtraNocturnas,
+                        montoComision, montoDietas, montoPrima,
+                        otrosDescuentosInput, 0.0, 0.0,
+                        salarioBaseQuincena, valorHora, montoHorasExtrasCalculado, montoBonificacion,
+                        otrosIngresosGravables, otrosIngresosSinDescuento,
+                        salarioBruto, descSeguroSocial, descSeguroEducativo, descISR,
+                        otrosDescuentos, totalDescuentos, salarioNeto, alertaDescExcede
+                    FROM detalle_planilla
+                """.trimIndent())
+                db.execSQL("DROP TABLE detalle_planilla")
+                db.execSQL("ALTER TABLE detalle_planilla_new RENAME TO detalle_planilla")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_detalle_planilla_planillaId_empleadoId ON detalle_planilla(planillaId, empleadoId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_detalle_planilla_empleadoId ON detalle_planilla(empleadoId)")
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
@@ -101,7 +226,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "prospera_db"
                 )
-                    .addMigrations(MIGRATION_3_4)
+                    .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
                     .build().also { INSTANCE = it }
             }
     }

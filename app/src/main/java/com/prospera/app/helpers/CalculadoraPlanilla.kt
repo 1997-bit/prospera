@@ -29,6 +29,8 @@ data class ResultadoPlanilla(
     // Ingresos
     val salarioBaseQuincena: Double,
     val valorHora: Double,
+    val montoHorasExtras: Double,
+    val montoBonificacion: Double,
     val otrosIngresos: Double,
     val otrosIngresosSinDescuento: Double,
     val detalleIngresos: List<DetalleIngreso>,
@@ -58,30 +60,47 @@ class CalculadoraPlanilla(
      * @param estadoCivil "casado", "unido", o "soltero"
      * @param horasSemanales default 48
      * @param semanasMes default 4.3333
+     * @param horasExtraDiurnas horas extra trabajadas en jornada diurna del período
+     * @param horasExtraNocturnas horas extra trabajadas en jornada nocturna del período
      * @param ingresos lista de ingresos variables del período
-     * @param otrosDescuentos descuentos adicionales (mueblería, adelantos, etc.)
+     * @param descMuebleria, descAdelanto, descAhorro descuentos itemizados del período (Art. 161 CT)
+     * @param cssEmpleado, segEducativo, isrDeduccionCasado tasas legales configurables (Configuración)
      */
     fun calcularQuincena(
         salarioBase: Double,
         estadoCivil: String = "soltero",
         horasSemanales: Double = 48.0,
         semanasMes: Double = 4.3333,
+        horasExtraDiurnas: Double = 0.0,
+        horasExtraNocturnas: Double = 0.0,
         ingresos: List<IngresoInput> = emptyList(),
-        otrosDescuentos: Double = 0.0
+        descMuebleria: Double = 0.0,
+        descAdelanto: Double = 0.0,
+        descAhorro: Double = 0.0,
+        cssEmpleado: Double = Constants.CSS_EMPLEADO,
+        segEducativo: Double = Constants.SEG_EDUCATIVO,
+        isrDeduccionCasado: Double = Constants.ISR_DEDUCCION_E
     ): ResultadoPlanilla {
 
         val quincena = redondear(salarioBase / 2)
         val valorHora = redondear(salarioBase / (horasSemanales * semanasMes), 4)
 
+        val montoHorasExtras = redondear(
+            valorHora * horasExtraDiurnas * Constants.RECARGO_DIURNO +
+                valorHora * horasExtraNocturnas * Constants.RECARGO_NOCTURNO
+        )
+        val montoBonificacion = redondear(salarioBase * Constants.BONIFICACION_PCT)
+
         val resultadoIngresos = procesarIngresos(ingresos, salarioBase, valorHora)
 
-        val bruto = redondear(quincena + resultadoIngresos.totalGravable)
+        val bruto = redondear(quincena + montoHorasExtras + montoBonificacion + resultadoIngresos.totalGravable)
         val baseCSS = redondear(bruto + resultadoIngresos.excedenteCSS)
 
-        val css = redondear(baseCSS * Constants.CSS_EMPLEADO)
-        val segEdu = redondear(baseCSS * Constants.SEG_EDUCATIVO)
-        val isr = calculadoraIsr.calcularQuincena(bruto, estadoCivil)
+        val css = redondear(baseCSS * cssEmpleado)
+        val segEdu = redondear(baseCSS * segEducativo)
+        val isr = calculadoraIsr.calcularQuincena(bruto, estadoCivil, isrDeduccionCasado)
 
+        val otrosDescuentos = redondear(descMuebleria + descAdelanto + descAhorro)
         val otrosDescAjustados = redondear(minOf(otrosDescuentos, bruto * Constants.MAX_OTROS_DESC_PCT))
         val totalDesc = redondear(css + segEdu + isr + otrosDescAjustados)
 
@@ -93,6 +112,8 @@ class CalculadoraPlanilla(
         return ResultadoPlanilla(
             salarioBaseQuincena = quincena,
             valorHora = valorHora,
+            montoHorasExtras = montoHorasExtras,
+            montoBonificacion = montoBonificacion,
             otrosIngresos = resultadoIngresos.totalGravable,
             otrosIngresosSinDescuento = resultadoIngresos.totalSinDescuento,
             detalleIngresos = resultadoIngresos.detalle,
@@ -121,7 +142,6 @@ class CalculadoraPlanilla(
         for (ingreso in ingresos) {
             val resultado = when (ingreso.tipo) {
                 "comision", "bonificacion" -> calcularComision(ingreso.monto)
-                "horas_extra" -> Triple(ingreso.monto, 0.0, 0.0)
                 "dietas" -> calcularConExencion(ingreso.monto, salMensual * Constants.DIETAS_EXENCION)
                 "prima" -> calcularConExencion(ingreso.monto, salMensual * Constants.PRIMA_EXENCION)
                 else -> Triple(ingreso.monto, 0.0, 0.0)

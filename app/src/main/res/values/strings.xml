@@ -66,6 +66,8 @@
     <string name="config_seccion_apariencia">APARIENCIA</string>
     <string name="config_modo_oscuro">Modo oscuro</string>
     <string name="config_notificaciones">Notificaciones</string>
+    <string name="config_seccion_empresa">DATOS DE LA EMPRESA</string>
+    <string name="config_horas_semanales">Horas semanales</string>
     <string name="config_seccion_tasas">TASAS LEGALES</string>
     <string name="config_tasas_advertencia">Verifica estos valores con la legislación vigente antes de modificar.</string>
     <string name="config_css_empleado">Seguro Social empleado (%)</string>

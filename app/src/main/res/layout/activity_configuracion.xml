@@ -182,6 +182,63 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- SECCIÓN DATOS DE LA EMPRESA -->
+        <TextView
+            android:id="@+id/lblEmpresa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="28dp"
+            android:letterSpacing="0.1"
+            android:text="@string/config_seccion_empresa"
+            android:textColor="@color/md_on_surface_variant"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardApariencia" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardEmpresa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            app:cardBackgroundColor="@color/card_bg"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/md_outline"
+            app:strokeWidth="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lblEmpresa">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/config_horas_semanales">
+                    <EditText
+                        android:id="@+id/etHorasSemanales"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btnGuardarEmpresa"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/config_guardar" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- SECCIÓN TASAS LEGALES -->
         <TextView
             android:id="@+id/lblTasas"
@@ -195,7 +252,7 @@
             android:textSize="12sp"
             android:fontFamily="sans-serif-medium"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardApariencia" />
+            app:layout_constraintTop_toBottomOf="@id/cardEmpresa" />
 
         <TextView
             android:id="@+id/tvTasasAdvertencia"

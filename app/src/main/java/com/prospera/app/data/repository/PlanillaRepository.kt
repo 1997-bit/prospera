@@ -9,6 +9,7 @@ import com.prospera.app.data.entities.DetallePlanillaEntity
 import com.prospera.app.data.entities.EmpleadoEntity
 import com.prospera.app.data.entities.EmpresaEntity
 import com.prospera.app.data.entities.PlanillaEntity
+import com.prospera.app.data.entities.PreferenciasEntity
 import com.prospera.app.helpers.CalculadoraPlanilla
 import com.prospera.app.helpers.IngresoInput
 
@@ -16,6 +17,7 @@ class PlanillaRepository(
     private val planillaDao: PlanillaDao,
     private val empleadoDao: EmpleadoDao,
     private val empresaDao: EmpresaDao,
+    private val preferenciasRepository: PreferenciasRepository,
     private val calculadora: CalculadoraPlanilla = CalculadoraPlanilla()
 ) {
 
@@ -30,6 +32,7 @@ class PlanillaRepository(
 
         val empresa = empresaDao.buscarPorId(empresaId)
             ?: error("Empresa $empresaId no encontrada")
+        val prefs = preferenciasRepository.obtener()
 
         val nuevaId = planillaDao.insertarPlanilla(
             PlanillaEntity(
@@ -47,11 +50,15 @@ class PlanillaRepository(
                 planillaId = nuevaId,
                 empleado = empleado,
                 empresa = empresa,
-                montoHorasExtrasInput = 0.0,
+                prefs = prefs,
+                horasExtraDiurnas = 0.0,
+                horasExtraNocturnas = 0.0,
                 montoComision = 0.0,
                 montoDietas = 0.0,
                 montoPrima = 0.0,
-                otrosDescuentosInput = 0.0
+                descMuebleria = 0.0,
+                descAdelanto = 0.0,
+                descAhorro = 0.0
             )
         }
         if (detalles.isNotEmpty()) planillaDao.insertarDetalles(detalles)
@@ -61,11 +68,14 @@ class PlanillaRepository(
 
     suspend fun actualizarLinea(
         detalleId: Long,
-        montoHorasExtrasInput: Double,
+        horasExtraDiurnas: Double,
+        horasExtraNocturnas: Double,
         montoComision: Double,
         montoDietas: Double,
         montoPrima: Double,
-        otrosDescuentosInput: Double
+        descMuebleria: Double,
+        descAdelanto: Double,
+        descAhorro: Double
     ) {
         val detalleActual = planillaDao.buscarDetallePorId(detalleId)
             ?: error("Detalle $detalleId no encontrado")
@@ -77,16 +87,21 @@ class PlanillaRepository(
             ?: error("Empleado ${detalleActual.empleadoId} no encontrado")
         val empresa = empresaDao.buscarPorId(planilla.empresaId)
             ?: error("Empresa ${planilla.empresaId} no encontrada")
+        val prefs = preferenciasRepository.obtener()
 
         val recalculado = construirDetalle(
             planillaId = detalleActual.planillaId,
             empleado = empleado,
             empresa = empresa,
-            montoHorasExtrasInput = montoHorasExtrasInput,
+            prefs = prefs,
+            horasExtraDiurnas = horasExtraDiurnas,
+            horasExtraNocturnas = horasExtraNocturnas,
             montoComision = montoComision,
             montoDietas = montoDietas,
             montoPrima = montoPrima,
-            otrosDescuentosInput = otrosDescuentosInput
+            descMuebleria = descMuebleria,
+            descAdelanto = descAdelanto,
+            descAhorro = descAhorro
         ).copy(id = detalleId)
 
         planillaDao.actualizarDetalle(recalculado)
@@ -116,15 +131,17 @@ class PlanillaRepository(
         planillaId: Long,
         empleado: EmpleadoEntity,
         empresa: EmpresaEntity,
-        montoHorasExtrasInput: Double,
+        prefs: PreferenciasEntity,
+        horasExtraDiurnas: Double,
+        horasExtraNocturnas: Double,
         montoComision: Double,
         montoDietas: Double,
         montoPrima: Double,
-        otrosDescuentosInput: Double
+        descMuebleria: Double,
+        descAdelanto: Double,
+        descAhorro: Double
     ): DetallePlanillaEntity {
-        // horas_extra entra como ingreso gravable directo: monto ya viene calculado a mano
         val ingresos = buildList {
-            if (montoHorasExtrasInput > 0) add(IngresoInput(tipo = "horas_extra", monto = montoHorasExtrasInput))
             if (montoComision > 0) add(IngresoInput(tipo = "comision", monto = montoComision))
             if (montoDietas > 0) add(IngresoInput(tipo = "dietas", monto = montoDietas))
             if (montoPrima > 0) add(IngresoInput(tipo = "prima", monto = montoPrima))
@@ -135,20 +152,32 @@ class PlanillaRepository(
             estadoCivil = empleado.estadoCivil,
             horasSemanales = empresa.horasSemanales,
             semanasMes = empresa.semanasMes,
+            horasExtraDiurnas = horasExtraDiurnas,
+            horasExtraNocturnas = horasExtraNocturnas,
             ingresos = ingresos,
-            otrosDescuentos = otrosDescuentosInput
+            descMuebleria = descMuebleria,
+            descAdelanto = descAdelanto,
+            descAhorro = descAhorro,
+            cssEmpleado = prefs.cssEmpleado,
+            segEducativo = prefs.segEducativo,
+            isrDeduccionCasado = prefs.isrDeduccionCasado
         )
 
         return DetallePlanillaEntity(
             planillaId = planillaId,
             empleadoId = empleado.id,
-            montoHorasExtrasInput = montoHorasExtrasInput,
+            horasExtraDiurnas = horasExtraDiurnas,
+            horasExtraNocturnas = horasExtraNocturnas,
             montoComision = montoComision,
             montoDietas = montoDietas,
             montoPrima = montoPrima,
-            otrosDescuentosInput = otrosDescuentosInput,
+            descMuebleria = descMuebleria,
+            descAdelanto = descAdelanto,
+            descAhorro = descAhorro,
             salarioBaseQuincena = resultado.salarioBaseQuincena,
             valorHora = resultado.valorHora,
+            montoHorasExtrasCalculado = resultado.montoHorasExtras,
+            montoBonificacion = resultado.montoBonificacion,
             otrosIngresosGravables = resultado.otrosIngresos,
             otrosIngresosSinDescuento = resultado.otrosIngresosSinDescuento,
             salarioBruto = resultado.salarioBruto,

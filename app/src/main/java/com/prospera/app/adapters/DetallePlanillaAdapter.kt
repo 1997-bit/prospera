@@ -18,11 +18,14 @@ class DetallePlanillaAdapter(
     private var filas: List<FilaPlanilla>,
     private val onRecalcular: (
         detalleId: Long,
-        montoHorasExtrasInput: Double,
+        horasExtraDiurnas: Double,
+        horasExtraNocturnas: Double,
         montoComision: Double,
         montoDietas: Double,
         montoPrima: Double,
-        otrosDescuentosInput: Double
+        descMuebleria: Double,
+        descAdelanto: Double,
+        descAhorro: Double
     ) -> Unit
 ) : RecyclerView.Adapter<DetallePlanillaAdapter.ViewHolder>() {
 
@@ -44,25 +47,33 @@ class DetallePlanillaAdapter(
         b.tvCargo.text = fila.empleado.cargo
 
         // set sin disparar listeners de focus al re-bind
-        b.etHorasExtras.setText(fila.detalle.montoHorasExtrasInput.takeIf { it != 0.0 }?.toString() ?: "")
+        b.etHorasDiurnas.setText(fila.detalle.horasExtraDiurnas.takeIf { it != 0.0 }?.toString() ?: "")
+        b.etHorasNocturnas.setText(fila.detalle.horasExtraNocturnas.takeIf { it != 0.0 }?.toString() ?: "")
         b.etComision.setText(fila.detalle.montoComision.takeIf { it != 0.0 }?.toString() ?: "")
         b.etDietas.setText(fila.detalle.montoDietas.takeIf { it != 0.0 }?.toString() ?: "")
         b.etPrima.setText(fila.detalle.montoPrima.takeIf { it != 0.0 }?.toString() ?: "")
-        b.etOtrosDescuentos.setText(fila.detalle.otrosDescuentosInput.takeIf { it != 0.0 }?.toString() ?: "")
+        b.etDescMuebleria.setText(fila.detalle.descMuebleria.takeIf { it != 0.0 }?.toString() ?: "")
+        b.etDescAdelanto.setText(fila.detalle.descAdelanto.takeIf { it != 0.0 }?.toString() ?: "")
+        b.etDescAhorro.setText(fila.detalle.descAhorro.takeIf { it != 0.0 }?.toString() ?: "")
 
-        b.tvResultado.text = "Bruto: ${Moneda.formatear(fila.detalle.salarioBruto)}  " +
+        b.tvResultado.text = "HE: ${Moneda.formatear(fila.detalle.montoHorasExtrasCalculado)}  " +
+                "Bonif: ${Moneda.formatear(fila.detalle.montoBonificacion)}  " +
+                "Bruto: ${Moneda.formatear(fila.detalle.salarioBruto)}  " +
                 "Desc: ${Moneda.formatear(fila.detalle.totalDescuentos)}  " +
                 "Neto: ${Moneda.formatear(fila.detalle.salarioNeto)}" +
-                if (fila.detalle.alertaDescExcede) "Descuentos exceden el límite" else ""
+                if (fila.detalle.alertaDescExcede) "  Descuentos exceden el límite" else ""
 
         b.btnRecalcular.setOnClickListener {
             onRecalcular(
                 fila.detalle.id,
-                b.etHorasExtras.text.toString().toDoubleOrNull() ?: 0.0,
+                b.etHorasDiurnas.text.toString().toDoubleOrNull() ?: 0.0,
+                b.etHorasNocturnas.text.toString().toDoubleOrNull() ?: 0.0,
                 b.etComision.text.toString().toDoubleOrNull() ?: 0.0,
                 b.etDietas.text.toString().toDoubleOrNull() ?: 0.0,
                 b.etPrima.text.toString().toDoubleOrNull() ?: 0.0,
-                b.etOtrosDescuentos.text.toString().toDoubleOrNull() ?: 0.0
+                b.etDescMuebleria.text.toString().toDoubleOrNull() ?: 0.0,
+                b.etDescAdelanto.text.toString().toDoubleOrNull() ?: 0.0,
+                b.etDescAhorro.text.toString().toDoubleOrNull() ?: 0.0
             )
         }
     }

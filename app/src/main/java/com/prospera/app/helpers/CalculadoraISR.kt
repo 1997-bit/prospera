@@ -14,7 +14,11 @@ class CalculadoraISR {
      * rentaAnual = brutoQuincena * 2 * 13 (24 quincenas + décimo)
      * Normativa: DGI Panamá, Art.10, Ley 8/15-mar-2010
      */
-    fun calcularQuincena(brutoQuincena: Double, estadoCivil: String): Double {
+    fun calcularQuincena(
+        brutoQuincena: Double,
+        estadoCivil: String,
+        isrDeduccionCasado: Double = Constants.ISR_DEDUCCION_E
+    ): Double {
         val rentaAnual = brutoQuincena * 2 * 13
 
         if (rentaAnual <= Constants.ISR_TRAMO1_TOPE) return 0.0
@@ -26,7 +30,7 @@ class CalculadoraISR {
         }
 
         val deduccion = if (estadoCivil in listOf("casado", "unido"))
-            (Constants.ISR_DEDUCCION_E * Constants.ISR_TRAMO2_TASA) / 24
+            (isrDeduccionCasado * Constants.ISR_TRAMO2_TASA) / 24
         else 0.0
 
         return redondear(maxOf(0.0, (isrAnual / 24) - deduccion))

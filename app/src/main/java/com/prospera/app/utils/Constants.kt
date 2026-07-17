@@ -26,6 +26,9 @@ object Constants {
     const val PRIMA_EXENCION = 0.50   // 50% salario mensual
     const val COMISION_VENTAS = 0.02
 
+    // Bonificación automática
+    const val BONIFICACION_PCT = 0.10  // 10% del salario base
+
     // Descuentos Art. 161 CT
     const val MAX_OTROS_DESC_PCT = 0.35
     const val MIN_NETO_PCT = 0.50

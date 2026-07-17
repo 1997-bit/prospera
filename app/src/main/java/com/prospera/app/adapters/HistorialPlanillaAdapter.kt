@@ -1,21 +1,40 @@
 package com.prospera.app.adapters
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.prospera.app.R
+import com.prospera.app.data.HistorialPlanillaRow
+import java.util.Locale
 
-class HistorialPlanillaAdapter : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_historial_planilla_adapter)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+class HistorialPlanillaAdapter(
+    private var filas: List<HistorialPlanillaRow>
+) : RecyclerView.Adapter<HistorialPlanillaAdapter.ViewHolder>() {
+
+    fun actualizarFilas(nuevas: List<HistorialPlanillaRow>) {
+        filas = nuevas
+        notifyDataSetChanged()
     }
+
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val tvPeriodo: TextView = view.findViewById(R.id.tvPeriodo)
+        val tvNeto: TextView = view.findViewById(R.id.tvNetoPagado)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_historial_planilla, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val fila = filas[position]
+        val etiquetaPeriodo = if (fila.periodo == "1ra_quincena") "1ra quincena" else "2da quincena"
+        holder.tvPeriodo.text = "$etiquetaPeriodo · ${fila.mes}/${fila.anio}"
+        holder.tvNeto.text = String.format(Locale("es", "PA"), "B/. %.2f", fila.salarioNeto)
+    }
+
+    override fun getItemCount(): Int = filas.size
 }

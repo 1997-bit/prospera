@@ -1,5 +1,6 @@
 package com.prospera.app.data.repository
 
+import com.prospera.app.data.AporteCssRow
 import com.prospera.app.data.ConsolidadoMensualRow
 import com.prospera.app.data.dao.EmpleadoDao
 import com.prospera.app.data.dao.EmpresaDao
@@ -17,6 +18,7 @@ class PlanillaRepository(
     private val empresaDao: EmpresaDao,
     private val calculadora: CalculadoraPlanilla = CalculadoraPlanilla()
 ) {
+
 
     suspend fun generarOAbrir(
         empresaId: Long,
@@ -106,6 +108,8 @@ class PlanillaRepository(
     suspend fun consolidadoMensual(empresaId: Long, mes: Int, anio: Int): List<ConsolidadoMensualRow> =
         planillaDao.consolidadoMensual(empresaId, mes, anio)
 
+    suspend fun reporteCssMensual(empresaId: Long, mes: Int, anio: Int): List<AporteCssRow> =
+        planillaDao.reporteCssMensual(empresaId, mes, anio)
     // --- privado ---
 
     private fun construirDetalle(

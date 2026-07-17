@@ -25,7 +25,13 @@
     <string name="btn_eliminar">Eliminar colaborador</string>
 
     <string name="planilla_titulo">Cálculo de planilla</string>
+    <string name="planilla_tab_calculo">Cálculo</string>
+    <string name="planilla_tab_historial">Historial</string>
+    <string name="planilla_tab_resumen">Resumen</string>
     <string name="planilla_periodo">Período</string>
+    <string name="planilla_mes">Mes</string>
+    <string name="planilla_anio">Año</string>
+    <string name="planilla_btn_abrir_periodo">Abrir planilla seleccionada</string>
     <string name="planilla_btn_calcular">Calcular planilla</string>
 
     <string name="reportes_titulo">Reportes</string>
@@ -57,7 +63,7 @@
     <string name="main_actividad_label">ACTIVIDAD RECIENTE</string>
     <string name="main_actividad_vacio">Sin actividad reciente</string>
     <string name="reportes_subtitulo">Elige el reporte a generar</string>
-    <string name="reportes_banner_info"><![CDATA[Todos los reportes incluyen opciones para <b>imprimir y enviar por correo</b>.]]></string>
+    <string name="reportes_banner_info">Todos los reportes incluyen opciones para &lt;b>imprimir y enviar por correo&lt;/b>.</string>
 
     <string name="config_titulo">Configuración</string>
     <string name="config_seccion_perfil">PERFIL</string>

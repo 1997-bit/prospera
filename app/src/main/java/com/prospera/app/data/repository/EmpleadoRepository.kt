@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.Flow
 
 class EmpleadoRepository(context: Context) {
 
-    private val dao = AppDatabase.getInstance(context).empleadoDao()
+    private val db = AppDatabase.getInstance(context)
+    private val dao = db.empleadoDao()
+    private val planillaDao = db.planillaDao()
 
     fun observarActivos(empresaId: Long): Flow<List<EmpleadoEntity>> = dao.observarActivos(empresaId)
 
@@ -51,7 +53,14 @@ class EmpleadoRepository(context: Context) {
     }
 
     suspend fun eliminar(id: Long) {
-        dao.buscarPorId(id)?.let { dao.eliminar(it) }
+        val empleado = dao.buscarPorId(id) ?: return
+        planillaDao.eliminarDetallesBorradorDeEmpleado(id)
+
+        if (planillaDao.contarDetallesPagadosDeEmpleado(id) > 0) {
+            dao.actualizar(empleado.copy(activo = false))
+        } else {
+            dao.eliminar(empleado)
+        }
     }
 
     suspend fun cedulaDisponible(cedula: String, empresaId: Long, idActual: Long? = null): Boolean {

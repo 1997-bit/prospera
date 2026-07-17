@@ -1,6 +1,7 @@
 package com.prospera.app.data.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -42,11 +43,37 @@ interface PlanillaDao {
     @Update
     suspend fun actualizarDetalle(detalle: DetallePlanillaEntity)
 
+    @Delete
+    suspend fun eliminarDetalle(detalle: DetallePlanillaEntity)
+
     @Query("SELECT * FROM detalle_planilla WHERE planillaId = :planillaId")
     suspend fun detallesDePlanilla(planillaId: Long): List<DetallePlanillaEntity>
 
     @Query("SELECT * FROM detalle_planilla WHERE id = :id LIMIT 1")
     suspend fun buscarDetallePorId(id: Long): DetallePlanillaEntity?
+
+    @Query("""
+        DELETE FROM detalle_planilla
+        WHERE planillaId = :planillaId
+          AND empleadoId NOT IN (
+              SELECT id FROM empleados WHERE empresaId = :empresaId AND activo = 1
+          )
+    """)
+    suspend fun eliminarDetallesDeEmpleadosInactivos(planillaId: Long, empresaId: Long)
+
+    @Query("""
+        DELETE FROM detalle_planilla
+        WHERE empleadoId = :empleadoId
+          AND planillaId IN (SELECT id FROM planillas WHERE estado = 'borrador')
+    """)
+    suspend fun eliminarDetallesBorradorDeEmpleado(empleadoId: Long)
+
+    @Query("""
+        SELECT COUNT(*) FROM detalle_planilla dp
+        JOIN planillas p ON p.id = dp.planillaId
+        WHERE dp.empleadoId = :empleadoId AND p.estado = 'pagada'
+    """)
+    suspend fun contarDetallesPagadosDeEmpleado(empleadoId: Long): Int
 
     @Query("""
     SELECT e.id AS empleadoId,

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/md_surface"
-        app:title="Reporte CSS"
+        app:title="Reporte de colaboradores"
         app:titleTextColor="@color/md_on_surface"
         app:navigationIcon="@android:drawable/ic_menu_revert"
         app:navigationIconTint="@color/md_on_surface" />
@@ -28,46 +28,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Selector de mes / año -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:hint="Mes">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/actvMes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="none" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:hint="Año">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/actvAnio"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="none" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-
-            <!-- Card de resumen -->
+            <!-- Resumen -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,71 +40,79 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:weightSum="2">
 
-                    <TextView
-                        android:id="@+id/tvPeriodoResumen"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/md_on_primary_container"
-                        android:textSize="14sp"
-                        tools:text="Julio 2026" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvColaboradoresResumen"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Activos"
+                            android:textColor="@color/md_on_primary_container"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tvTotalActivos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/md_on_primary_container"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            tools:text="8" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@color/md_on_primary_container"
-                        android:textSize="14sp"
-                        tools:text="8 colaboradores" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="12dp"
-                        android:background="@color/md_outline" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Inactivos"
+                            android:textColor="@color/md_on_primary_container"
+                            android:textSize="12sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Total aportes CSS"
-                        android:textColor="@color/md_on_primary_container"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/tvTotalCss"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/md_on_primary_container"
-                        android:textStyle="bold"
-                        android:textSize="20sp"
-                        tools:text="B/. 0.00" />
+                        <TextView
+                            android:id="@+id/tvTotalInactivos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/md_on_primary_container"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            tools:text="2" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="APORTES POR COLABORADOR"
+                android:text="PERSONAL"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 android:letterSpacing="0.05"
                 android:layout_marginBottom="8dp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvAportesCss"
+                android:id="@+id/rvColaboradores"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
-                tools:listitem="@layout/item_aporte_css" />
+                tools:listitem="@layout/item_reporte_colaborador" />
 
             <TextView
                 android:id="@+id/tvSinDatos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No hay planillas pagadas para este período."
+                android:text="No hay colaboradores registrados."
                 android:textColor="@color/text_secondary"
                 android:textAlignment="center"
                 android:padding="24dp"

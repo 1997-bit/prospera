@@ -44,4 +44,7 @@ interface EmpleadoDao {
 
     @Query("SELECT COUNT(*) FROM empleados WHERE empresaId = :empresaId AND activo = 1")
     suspend fun contarActivos(empresaId: Long): Int
+
+    @Query("SELECT * FROM empleados WHERE empresaId = :empresaId ORDER BY activo DESC, nombre ASC")
+    suspend fun listarTodos(empresaId: Long): List<EmpleadoEntity>
 }

@@ -4,7 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.prospera.app.data.AporteCssRow
 import com.prospera.app.data.ConsolidadoMensualRow
+import com.prospera.app.data.HistorialPlanillaRow
 import com.prospera.app.data.entities.DetallePlanillaEntity
 import com.prospera.app.data.entities.PlanillaEntity
 
@@ -47,16 +49,47 @@ interface PlanillaDao {
     suspend fun buscarDetallePorId(id: Long): DetallePlanillaEntity?
 
     @Query("""
-        SELECT e.id AS empleadoId,
-               SUM(dp.salarioBruto) AS brutoMes,
-               SUM(dp.totalDescuentos) AS descuentosMes,
-               SUM(dp.salarioNeto) AS netoMes
-        FROM detalle_planilla dp
-        JOIN planillas p ON p.id = dp.planillaId
-        JOIN empleados e ON e.id = dp.empleadoId
-        WHERE p.empresaId = :empresaId AND p.mes = :mes AND p.anio = :anio
-          AND p.estado = 'pagada'
-        GROUP BY e.id
-    """)
+    SELECT e.id AS empleadoId,
+           e.nombre AS nombreEmpleado,
+           e.cargo AS cargoEmpleado,
+           SUM(dp.salarioBruto) AS brutoMes,
+           SUM(dp.totalDescuentos) AS descuentosMes,
+           SUM(dp.salarioNeto) AS netoMes
+    FROM detalle_planilla dp
+    JOIN planillas p ON p.id = dp.planillaId
+    JOIN empleados e ON e.id = dp.empleadoId
+    WHERE p.empresaId = :empresaId AND p.mes = :mes AND p.anio = :anio
+      AND p.estado = 'pagada'
+    GROUP BY e.id
+    ORDER BY e.nombre ASC
+""")
     suspend fun consolidadoMensual(empresaId: Long, mes: Int, anio: Int): List<ConsolidadoMensualRow>
-}
+
+    @Query("""
+    SELECT p.periodo AS periodo,
+           p.mes AS mes,
+           p.anio AS anio,
+           dp.salarioNeto AS salarioNeto,
+           p.fechaPago AS fechaPago
+    FROM detalle_planilla dp
+    JOIN planillas p ON p.id = dp.planillaId
+    WHERE dp.empleadoId = :empleadoId AND p.estado = 'pagada'
+    ORDER BY p.anio DESC, p.mes DESC, p.periodo DESC
+""")
+    suspend fun historialPorEmpleado(empleadoId: Long): List<HistorialPlanillaRow>
+
+    @Query("""
+    SELECT e.id AS empleadoId,
+           e.nombre AS nombreEmpleado,
+           e.cedula AS cedula,
+           SUM(dp.descSeguroSocial) AS seguroSocialMes,
+           SUM(dp.descSeguroEducativo) AS seguroEducativoMes
+    FROM detalle_planilla dp
+    JOIN planillas p ON p.id = dp.planillaId
+    JOIN empleados e ON e.id = dp.empleadoId
+    WHERE p.empresaId = :empresaId AND p.mes = :mes AND p.anio = :anio
+      AND p.estado = 'pagada'
+    GROUP BY e.id
+    ORDER BY e.nombre ASC
+""")
+    suspend fun reporteCssMensual(empresaId: Long, mes: Int, anio: Int): List<AporteCssRow>}

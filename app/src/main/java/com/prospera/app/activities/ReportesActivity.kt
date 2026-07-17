@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import com.prospera.app.R
+import com.prospera.app.activities.ReportePlanillaConsolidadaActivity
+
 
 class ReportesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,11 +16,22 @@ class ReportesActivity : AppCompatActivity() {
         findViewById<MaterialToolbar>(R.id.toolbar).setNavigationOnClickListener {
             finish()
         }
+        findViewById<android.view.View>(R.id.cardReportePlanilla).setOnClickListener {
+            startActivity(Intent(this, ReportePlanillaConsolidadaActivity::class.java))
+        }
 
-        abrirReporteAlTocar(R.id.cardReportePlanilla, R.string.reporte_planilla_nombre)
-        abrirReporteAlTocar(R.id.cardReporteColaboradores, R.string.reporte_colaboradores_nombre)
-        abrirReporteAlTocar(R.id.cardReporteIndividual, R.string.reporte_individual_nombre)
-        abrirReporteAlTocar(R.id.cardReporteCSS, R.string.reporte_css_nombre)
+        findViewById<android.view.View>(R.id.cardReporteColaboradores).setOnClickListener {
+            startActivity(Intent(this, ReporteColaboradoresActivity::class.java))
+        }
+
+        findViewById<android.view.View>(R.id.cardReporteIndividual).setOnClickListener {
+            startActivity(Intent(this, ReporteIndividualActivity::class.java))
+        }
+
+        findViewById<android.view.View>(R.id.cardReporteCSS).setOnClickListener {
+            startActivity(Intent(this, ReporteCssActivity::class.java))
+        }
+
     }
 
     private fun abrirReporteAlTocar(cardId: Int, tituloResId: Int) {

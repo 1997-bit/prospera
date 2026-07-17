@@ -15,6 +15,8 @@ data class ActividadReciente(
 
 data class ConsolidadoMensualRow(
     val empleadoId: Long,
+    val nombreEmpleado: String,
+    val cargoEmpleado: String,
     val brutoMes: Double,
     val descuentosMes: Double,
     val netoMes: Double
@@ -26,6 +28,24 @@ data class UsuarioConRol(
     val email: String,
     val rol: String
 )
+
+data class HistorialPlanillaRow(
+    val periodo: String,
+    val mes: Int,
+    val anio: Int,
+    val salarioNeto: Double,
+    val fechaPago: Long?
+)
+
+data class AporteCssRow(
+    val empleadoId: Long,
+    val nombreEmpleado: String,
+    val cedula: String,
+    val seguroSocialMes: Double,
+    val seguroEducativoMes: Double
+) {
+    val totalCss: Double get() = seguroSocialMes + seguroEducativoMes
+}
 
 data class ResumenMensual(
     val mesAnio: String, // "Junio 2026"

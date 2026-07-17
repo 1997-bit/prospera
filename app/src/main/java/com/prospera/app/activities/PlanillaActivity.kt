@@ -1,16 +1,19 @@
 package com.prospera.app.activities
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.tabs.TabLayout
 import com.prospera.app.R
 import com.prospera.app.adapters.DetallePlanillaAdapter
 import com.prospera.app.adapters.FilaPlanilla
 import com.prospera.app.data.AppDatabase
 import com.prospera.app.data.repository.PlanillaRepository
 import com.prospera.app.databinding.ActivityPlanillaBinding
+import com.prospera.app.utils.Moneda
 import com.prospera.app.utils.SessionManager
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -29,6 +32,7 @@ class PlanillaActivity : AppCompatActivity() {
     private var periodo = "1ra_quincena"
     private var mes = 0
     private var anio = 0
+    private var filasActuales: List<FilaPlanilla> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +65,7 @@ class PlanillaActivity : AppCompatActivity() {
         }
         binding.rvPlanilla.layoutManager = LinearLayoutManager(this)
         binding.rvPlanilla.adapter = adapter
+        configurarTabs()
 
         binding.btnCalcular.setOnClickListener {
             lifecycleScope.launch {
@@ -82,6 +87,45 @@ class PlanillaActivity : AppCompatActivity() {
         }
     }
 
+    private fun configurarTabs() {
+        binding.tabPlanilla.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) = mostrarTab(tab.position)
+            override fun onTabUnselected(tab: TabLayout.Tab) = Unit
+            override fun onTabReselected(tab: TabLayout.Tab) = mostrarTab(tab.position)
+        })
+        mostrarTab(0)
+    }
+
+    private fun mostrarTab(posicion: Int) {
+        val esCalculo = posicion == 0
+        binding.rvPlanilla.visibility = if (esCalculo) View.VISIBLE else View.GONE
+        binding.btnCalcular.visibility = if (esCalculo) View.VISIBLE else View.GONE
+        binding.cardContenidoTab.visibility = if (esCalculo) View.GONE else View.VISIBLE
+
+        binding.tvContenidoTab.text = when (posicion) {
+            1 -> textoHistorial()
+            2 -> textoResumen()
+            else -> ""
+        }
+    }
+
+    private fun textoHistorial(): String =
+        "Historial de planilla\n\n" +
+            "Aquí se consultan las planillas generadas y pagadas por período.\n\n" +
+            "Para ver reportes consolidados, entra al módulo Reportes."
+
+    private fun textoResumen(): String {
+        val totalBruto = filasActuales.sumOf { it.detalle.salarioBruto }
+        val totalDescuentos = filasActuales.sumOf { it.detalle.totalDescuentos }
+        val totalNeto = filasActuales.sumOf { it.detalle.salarioNeto }
+
+        return "Resumen de la planilla\n\n" +
+            "Colaboradores: ${filasActuales.size}\n" +
+            "Total bruto: ${Moneda.formatear(totalBruto)}\n" +
+            "Total descuentos: ${Moneda.formatear(totalDescuentos)}\n" +
+            "Total neto: ${Moneda.formatear(totalNeto)}"
+    }
+
     private fun actualizarEncabezado(estado: String) {
         binding.tvEstadoPlanilla.text = "$periodo · $mes/$anio · ${estado.uppercase()}"
         binding.btnCalcular.isEnabled = estado == "borrador"
@@ -94,6 +138,8 @@ class PlanillaActivity : AppCompatActivity() {
             val empleado = db.empleadoDao().buscarPorId(detalle.empleadoId)!!
             FilaPlanilla(detalle, empleado)
         }
+        filasActuales = filas
         adapter.actualizarFilas(filas)
+        mostrarTab(binding.tabPlanilla.selectedTabPosition)
     }
 }
